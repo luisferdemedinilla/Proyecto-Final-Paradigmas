@@ -2806,18 +2806,24 @@ MonoBehaviour:
   respawnKey: 32
   walkSpeed: 3.5
   runSpeed: 6
-  acceleration: 32
-  braking: 40
-  airAcceleration: 18
+  requireRunKey: 0
+  acceleration: 8
+  braking: 18
+  airAcceleration: 6
   jumpSpeed: 8.5
+  minimumJumpSpeed: 4
+  jumpHoldAcceleration: 18
+  maxJumpHoldTime: 0.3
   coyoteTime: 0.1
   jumpBuffer: 0.12
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  airSpinDuration: 0.45
+  airSpinFallSpeed: 1.5
   crouchSpeed: 1.4
-  crouchHeight: 1.28
-  crouchVisualDrop: 0.3
+  crouchHeight: 1.4
+  crouchVisualDrop: 0.35
   visual: {fileID: 84753377}
   spawnPoint: {fileID: 1858892257}
   respawnWhenFalling: 1

@@ -14,7 +14,7 @@ Jerarquía:
 - Cameras: Main Camera lateral ortográfica.
 - Lighting: Directional Light.
 
-La cámara está en (10,5; 2,8; -25), mira hacia +Z y tiene Orthographic Size 8,3. El encuadre completo se ha comprobado a 1600×900 (16:9). Mario comienza en (-1,5; 0,15; 0), orientado hacia +X.
+La cámara lateral sigue suavemente a Mario, con desplazamiento (2; 1,8; -25) y Orthographic Size 4,5. Mario comienza en (-1,5; 0,15; 0), orientado hacia +X.
 
 ## Física de la instancia
 
@@ -30,7 +30,7 @@ La instancia de prueba añade exactamente un Rigidbody 3D y un CapsuleCollider; 
 
 Se ha comprobado por SHA-256 que Mario.prefab, su .meta, el Animator Controller y todos los clips y sus .meta permanecen intactos.
 
-## Prueba realizada
+## Prueba inicial del escenario
 
 Se ejecutó realmente Play Mode con MarioTest como escena de inicio temporal. Se comprobó que avanzaban los fotogramas y que:
 
@@ -40,12 +40,23 @@ Se ejecutó realmente Play Mode con MarioTest como escena de inicio temporal. Se
 4. La pared intermedia frena el movimiento en X, mientras una velocidad en Z y un impulso de giro no sacan al personaje del plano ni cambian su orientación.
 5. El hueco deja caer a Mario por debajo del nivel.
 
-Las posiciones y fuerzas de comprobación se aplican únicamente desde una utilidad del Editor durante la prueba; no hay scripts de control ni físicas adicionales en el personaje. Se ha revisado también la captura de la cámara lateral.
+## Controles y movilidad
 
-## Cómo abrirlo
+Pulsa Play en MarioTest. Selecciona Actors/Mario y su componente MarioPlayerController para cambiar teclas y parámetros en el Inspector.
 
-Guarda tus cambios pendientes en SampleScene cuando quieras conservarlos y abre MarioTest desde Project. Al pulsar Play, Mario activa Idle y se apoya en el suelo. **Todavía no hay controles de teclado, caminar ni saltar mediante input**, ni un script que sincronice Grounded/VerticalSpeed con la física. Esto se añadirá en la siguiente fase.
+- A/D: izquierda/derecha. La velocidad aumenta progresivamente hasta Run Speed (6), con Acceleration (8). Braking (18) frena al soltar y Air Acceleration (6) controla la respuesta en el aire.
+- W o espacio: salto variable. Un toque da un salto corto; mantener la tecla añade impulso durante Max Jump Hold Time (0,3 s). Minimum Jump Speed (4) fija el impulso inicial, Jump Hold Acceleration (18) la asistencia y Jump Speed (8,5) el límite de velocidad vertical. Soltar cancela la asistencia; volver a pulsar en el aire no la reinicia.
+- Vuelve a pulsar W o espacio después de soltar el salto: giro aéreo de 360°, una vez por salto. Air Spin Duration (0,45 s) controla su duración y Air Spin Fall Speed (1,5) limita temporalmente la caída. Funciona durante la subida o bajada tras saltar, sin añadir un segundo impulso ascendente. Aterrizar permite usarlo otra vez; caer de un borde sin saltar no lo activa.
+- S: agacharse. La pose dobla las piernas y ajusta la altura visual según los tobillos, también durante las transiciones, para conservar el apoyo. La cápsula reduce su altura a 1,4 manteniendo la base. Un techo impide levantarse.
+- R: volver al inicio. También se reinicia al caer por debajo de Y=-10.
+- Require Run Key está desactivado: A/D alcanzan la velocidad máxima sin Shift. Si se activa, Run Key (Shift izquierdo) permite superar Walk Speed.
 
-Para repetir las pruebas automáticas: **Tools > Mario Test > Run Physics Validation**. La utilidad restaura la escena de edición y la configuración anterior de inicio de Play Mode al terminar. Los resultados locales están en `Temp/MarioTestAudit/physics-validation.json` y la vista en `Documentation/MarioTest.png`.
+El movimiento queda restringido al plano XY y Root Motion permanece desactivado. La instancia usa MarioGameplay.controller; el prefab original, su controlador y los cinco clips originales se conservan.
 
-SampleScene y sus cinco objetos raíz con cambios pendientes se conservaron sin guardar ni descartar. No se han añadido enemigos, monedas, bloques especiales ni un editor de niveles.
+## Validación de movilidad
+
+**Tools > Mario Test > Validate Mobility Refinements** ejecuta pruebas en Play Mode con teclado virtual: aceleración, velocidad máxima, frenado, apoyo de la malla al agacharse y cuatro duraciones de salto. Crea un suelo temporal que desaparece al finalizar y restaura la configuración previa de inicio de Play Mode. Resultados en `Temp/MarioMobilityAudit/results.json` y captura en `Temp/MarioMobilityAudit/crouch.png`.
+
+La antigua prueba Run Physics Validation corresponde a la fase anterior a los controles. Para comprobar los cambios actuales utiliza Validate Mobility Refinements.
+
+**Tools > Mario Test > Validate Air Spin** comprueba en Play Mode la activación mediante teclado, la reducción de caída, el giro del esqueleto, la recuperación de gravedad, el límite de un uso, el reinicio al aterrizar y la cancelación al reaparecer. Resultados en `Temp/MarioAirSpinAudit/results.json`. El clip `AirSpin.anim` y el estado AirSpin están en el controlador MarioGameplay.

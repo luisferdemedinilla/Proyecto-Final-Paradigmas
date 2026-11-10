@@ -59,6 +59,24 @@ public static class MarioGameplaySetup
         Debug.Log("MarioTest configured with editable keyboard controls, crouch and camera follow.");
     }
 
+    [MenuItem("Tools/Mario Test/Apply Mobility Refinements")]
+    public static void Refine()
+    {
+        Check(!EditorApplication.isPlaying,"Exit Play Mode first");
+        var scene=SceneManager.GetSceneByPath(MarioTestSceneSetup.ScenePath);
+        Check(scene.IsValid() && scene.isLoaded,"Open MarioTest first");
+        var player=scene.GetRootGameObjects().SelectMany(r=>r.GetComponentsInChildren<MarioPlayerController>(true)).Single();
+        CreateCrouch();
+        var data=new SerializedObject(player);
+        data.FindProperty("requireRunKey").boolValue=false;
+        string[] names={"acceleration","braking","airAcceleration","crouchHeight","crouchVisualDrop","minimumJumpSpeed","jumpHoldAcceleration","maxJumpHoldTime"};
+        float[] values={8,18,6,1.4f,.35f,4,18,.3f};
+        for(int i=0;i<names.Length;i++) data.FindProperty(names[i]).floatValue=values[i];
+        data.ApplyModifiedProperties();
+        EditorSceneManager.MarkSceneDirty(scene);Check(EditorSceneManager.SaveScene(scene),"Scene save failed");
+        Debug.Log("Mario mobility refinements saved.");
+    }
+
     static AnimationClip CreateCrouch()
     {
         var scene=EditorSceneManager.NewPreviewScene();
@@ -77,12 +95,12 @@ public static class MarioGameplaySetup
                 idle.SampleAnimation(go,0);
                 Transform Bone(string n) => go.GetComponentsInChildren<Transform>(true).Single(t=>t.name==n);
                 float breath=Mathf.Sin(frame/30f*Mathf.PI*2)*1.2f;
-                var spine=Bone("spin");spine.rotation=Quaternion.AngleAxis(22+breath,Vector3.right)*rest[spine].worldRotation;
+                var spine=Bone("spin");spine.rotation=Quaternion.AngleAxis(35+breath,Vector3.right)*rest[spine].worldRotation;
                 var head=Bone("face_1");head.rotation=rest[head].worldRotation;
                 foreach(var side in new[]{"l","r"})
                 {
-                    var thigh=Bone("leg_"+side+"1");thigh.rotation=Quaternion.AngleAxis(-46,Vector3.right)*rest[thigh].worldRotation;
-                    var shin=Bone("leg_"+side+"2");shin.rotation=Quaternion.AngleAxis(92,Vector3.right)*shin.rotation;
+                    var thigh=Bone("leg_"+side+"1");thigh.rotation=Quaternion.AngleAxis(-65,Vector3.right)*rest[thigh].worldRotation;
+                    var shin=Bone("leg_"+side+"2");shin.rotation=Quaternion.AngleAxis(130,Vector3.right)*shin.rotation;
                     var ankle=Bone("ankle_"+side+"1");ankle.rotation=rest[ankle].worldRotation;
                 }
                 foreach(var binding in bindings)
@@ -95,6 +113,8 @@ public static class MarioGameplaySetup
             }
             foreach(var pair in keys) AnimationUtility.SetEditorCurve(clip,pair.Key,pair.Value);
             clip.EnsureQuaternionContinuity();var options=AnimationUtility.GetAnimationClipSettings(clip);options.loopTime=true;AnimationUtility.SetAnimationClipSettings(clip,options);
+            var existing=AssetDatabase.LoadAssetAtPath<AnimationClip>(Animations+"/Crouch.anim");
+            if(existing!=null) {EditorUtility.CopySerialized(clip,existing);UnityEngine.Object.DestroyImmediate(clip);EditorUtility.SetDirty(existing);AssetDatabase.SaveAssetIfDirty(existing);return existing;}
             AssetDatabase.CreateAsset(clip,Animations+"/Crouch.anim");return clip;
         }
         finally {EditorSceneManager.ClosePreviewScene(scene);}
@@ -108,8 +128,11 @@ public static class MarioGameplaySetup
             var go=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(MarioAnimationTools.PrefabPath),preview.camera.scene);preview.AddSingleGO(go);
             go.GetComponent<Animator>().runtimeAnimatorController=null;
             foreach(var r in go.GetComponentsInChildren<SkinnedMeshRenderer>(true)) r.updateWhenOffscreen=true;
+            var ankles=go.GetComponentsInChildren<Transform>().Where(t=>t.name=="ankle_l1"||t.name=="ankle_r1").ToArray();
+            var rest=ankles.Select(t=>t.position.y).ToArray();
             AssetDatabase.LoadAssetAtPath<AnimationClip>(Animations+"/Crouch.anim").SampleAnimation(go,0.3f);
-            go.transform.Find("Visual").localPosition=Vector3.down*0.3f;
+            go.transform.Find("Visual").localPosition=Vector3.down*Mathf.Clamp(ankles.Select((t,i)=>t.position.y-rest[i]).Min(),0,.35f);
+            Directory.CreateDirectory("Temp/MarioGameplayAudit");
             MarioAnimationValidation.ConfigureCamera(preview,50);
             var image=MarioAnimationValidation.Render(preview,700);
             File.WriteAllBytes("Temp/MarioGameplayAudit/crouch-isolated.png",image.EncodeToPNG());UnityEngine.Object.DestroyImmediate(image);

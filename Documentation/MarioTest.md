@@ -2,6 +2,8 @@
 
 Escena: `Assets/_Project/Scenes/MarioTest.unity`.
 
+Actualización HelloMario: la escena usa ahora el nuevo modelo y animaciones. Mario, Luigi y Toad pueden seleccionarse desde **Tools > Hello Mario > Use … In Test Scene**. Véase [la integración y sus limitaciones](HelloMario-integration.md). Las dimensiones de las cápsulas se ajustan al personaje; los datos de la prueba inicial que siguen documentan la versión original.
+
 ## Escenario
 
 Nivel 2.5D de cubos con tres tramos de suelo, cuatro plataformas elevadas, cuatro escalones, tres paredes y dos huecos (x=9–11 y x=18–20). Los 14 bloques sólidos tienen BoxCollider; las franjas de hierba y la marca de inicio son decorativas y no duplican colisiones.

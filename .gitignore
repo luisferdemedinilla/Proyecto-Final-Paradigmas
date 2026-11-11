@@ -44,3 +44,7 @@ Desktop.ini
 
 # Keep Assets (including .meta files), Packages and ProjectSettings tracked.
 # .vsconfig is shared IDE configuration and can also be tracked.
+
+# Original HelloMario package only; keep integrated _Project resources tracked.
+/Assets/HelloMario/
+/Assets/HelloMario.meta

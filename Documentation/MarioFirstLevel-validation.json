@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "error": null,
+  "results": [
+    {
+      "name": "Gold coin rotates",
+      "passed": true,
+      "frames": 198
+    },
+    {
+      "name": "Playable spawn and UI",
+      "passed": true,
+      "frames": 198
+    },
+    {
+      "name": "S on ground crouches",
+      "passed": true,
+      "frames": 240
+    },
+    {
+      "name": "Airborne crouch starts preparation",
+      "passed": true,
+      "frames": 460
+    },
+    {
+      "name": "Fast vertical pound",
+      "passed": true,
+      "frames": 556
+    },
+    {
+      "name": "Pound landing and recovery",
+      "passed": true,
+      "frames": 838
+    },
+    {
+      "name": "Animated Goomba chases",
+      "passed": true,
+      "frames": 975
+    },
+    {
+      "name": "Goomba chases beyond patrol boundary",
+      "passed": true,
+      "frames": 1511
+    },
+    {
+      "name": "Goomba crosses seam beside wall",
+      "passed": true,
+      "frames": 1610
+    },
+    {
+      "name": "Goomba detects real gap",
+      "passed": true,
+      "frames": 1908
+    },
+    {
+      "name": "Side contact loses level",
+      "passed": true,
+      "frames": 1971
+    },
+    {
+      "name": "Restart restores level",
+      "passed": true,
+      "frames": 2085
+    },
+    {
+      "name": "Descending stomp defeats Goomba and bounces",
+      "passed": true,
+      "frames": 2140
+    },
+    {
+      "name": "Ordinary coin does not win",
+      "passed": true,
+      "frames": 2527
+    },
+    {
+      "name": "Designated goal coin wins",
+      "passed": true,
+      "frames": 2534
+    },
+    {
+      "name": "Ground pound defeats Goomba",
+      "passed": true,
+      "frames": 2911
+    },
+    {
+      "name": "Real gap removes grounded support",
+      "passed": true,
+      "frames": 3128
+    },
+    {
+      "name": "Falling through gap loses level",
+      "passed": true,
+      "frames": 3585
+    },
+    {
+      "name": "R restarts after falling without repeated defeat",
+      "passed": true,
+      "frames": 3924
+    },
+    {
+      "name": "Retry button restarts after falling without repeated defeat",
+      "passed": true,
+      "frames": 4210
+    }
+  ],
+  "date": "2026-11-11"
+}

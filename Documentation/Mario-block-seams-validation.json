@@ -1,0 +1,146 @@
+{
+  "passed": true,
+  "date": "2026-11-11",
+  "before": [
+    {
+      "character": "Mario",
+      "badFrames": 385,
+      "examples": [
+        {
+          "t": 0.9012145,
+          "x": 11.5396786,
+          "y": 0.00243937969,
+          "vx": 2.43570352,
+          "vy": -0.0358983576,
+          "ground": false,
+          "pound": 0,
+          "state": "Walk",
+          "normalizedTime": 0.150407925,
+          "clips": [
+            {
+              "name": "Walk",
+              "weight": 1.0
+            }
+          ]
+        },
+        {
+          "t": 0.903902,
+          "x": 11.5396786,
+          "y": 0.00243937969,
+          "vx": 2.43570352,
+          "vy": -0.0358983576,
+          "ground": false,
+          "pound": 0,
+          "state": "Walk",
+          "normalizedTime": 0.151751682,
+          "clips": [
+            {
+              "name": "Walk",
+              "weight": 0.9701389
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "character": "Luigi",
+      "badFrames": 378,
+      "examples": [
+        {
+          "t": 0.9009485,
+          "x": 11.5396786,
+          "y": 0.0024394393,
+          "vx": 2.43570375,
+          "vy": -0.035898298,
+          "ground": false,
+          "pound": 0,
+          "state": "Walk",
+          "normalizedTime": 0.149996012,
+          "clips": [
+            {
+              "name": "Walk",
+              "weight": 1.0
+            }
+          ]
+        },
+        {
+          "t": 0.9034066,
+          "x": 11.5396786,
+          "y": 0.0024394393,
+          "vx": 2.43570375,
+          "vy": -0.035898298,
+          "ground": false,
+          "pound": 0,
+          "state": "Walk",
+          "normalizedTime": 0.15122506,
+          "clips": [
+            {
+              "name": "Walk",
+              "weight": 0.9726878
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "character": "Toad",
+      "badFrames": 337,
+      "examples": [
+        {
+          "t": 0.7199955,
+          "x": 11.5396786,
+          "y": 0.00243937969,
+          "vx": 2.43570352,
+          "vy": -0.0358983576,
+          "ground": false,
+          "pound": 0,
+          "state": "Walk",
+          "normalizedTime": 0.150317654,
+          "clips": [
+            {
+              "name": "Walk",
+              "weight": 1.0
+            }
+          ]
+        },
+        {
+          "t": 0.722892761,
+          "x": 11.5396786,
+          "y": 0.00243937969,
+          "vx": 2.43570352,
+          "vy": -0.0358983576,
+          "ground": false,
+          "pound": 0,
+          "state": "Walk",
+          "normalizedTime": 0.151766,
+          "clips": [
+            {
+              "name": "Walk",
+              "weight": 0.967814445
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "after": [
+    {
+      "character": "Mario",
+      "samples": 798,
+      "falseFallOrUngroundedFrames": 0,
+      "maxSpeed": 6.0
+    },
+    {
+      "character": "Luigi",
+      "samples": 828,
+      "falseFallOrUngroundedFrames": 0,
+      "maxSpeed": 6.0
+    },
+    {
+      "character": "Toad",
+      "samples": 796,
+      "falseFallOrUngroundedFrames": 0,
+      "maxSpeed": 6.0
+    }
+  ]
+}

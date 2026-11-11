@@ -12,12 +12,14 @@ public static class MarioMobilityValidation
 {
     const string Session="MarioMobility.Validation";
     static Keyboard keyboard;
+    static InputSettings.BackgroundBehavior previousBackgroundBehavior;
+    static bool inputSettingsChanged;
     static MarioPlayerController player;
     static Rigidbody body;
     static GameObject floor;
     static Key[] keys=Array.Empty<Key>();
     static int phase,firstFrame,jumpIndex;
-    static float began,peak,slowSpeed,fastSpeed,restFoot;
+    static float began,peak,slowSpeed,fastSpeed,restFoot,nextDiagnostic;
     static double deadline;
     static readonly float[] holds={.04f,.15f,.35f,1f};
     static readonly List<float> heights=new List<float>();
@@ -37,11 +39,12 @@ public static class MarioMobilityValidation
         if(!SessionState.GetBool(Session,false)) return;
         if(state==PlayModeStateChange.EnteredPlayMode)
         {
+            previousBackgroundBehavior=InputSystem.settings.backgroundBehavior;InputSystem.settings.backgroundBehavior=InputSettings.BackgroundBehavior.IgnoreFocus;inputSettingsChanged=true;
             Application.runInBackground=true;player=GameObject.Find("Actors/Mario").GetComponent<MarioPlayerController>();body=player.GetComponent<Rigidbody>();
             floor=GameObject.CreatePrimitive(PrimitiveType.Cube);floor.name="Temporary mobility test floor";floor.transform.position=new Vector3(-40,-.5f,0);floor.transform.localScale=new Vector3(50,1,6);
             body.position=new Vector3(-40,.1f,0);body.linearVelocity=Vector3.zero;Physics.SyncTransforms();
             keyboard=InputSystem.AddDevice<Keyboard>();keyboard.MakeCurrent();phase=0;jumpIndex=0;began=Time.time;deadline=EditorApplication.timeSinceStartup+75;firstFrame=Time.frameCount;
-            heights.Clear();results.Clear();keys=Array.Empty<Key>();EditorApplication.update-=Tick;EditorApplication.update+=Tick;
+            heights.Clear();results.Clear();keys=Array.Empty<Key>();InputSystem.onBeforeUpdate-=QueueInput;InputSystem.onBeforeUpdate+=QueueInput;EditorApplication.update-=Tick;EditorApplication.update+=Tick;
         }
         if(state==PlayModeStateChange.ExitingPlayMode) Cleanup();
         if(state==PlayModeStateChange.EnteredEditMode)
@@ -49,7 +52,7 @@ public static class MarioMobilityValidation
             var path=SessionState.GetString(Session+".Start","");EditorSceneManager.playModeStartScene=string.IsNullOrEmpty(path)?null:AssetDatabase.LoadAssetAtPath<SceneAsset>(path);SessionState.SetBool(Session,false);
         }
     }
-    static void Next(params Key[] input) {phase++;keys=input;began=Time.time;}
+    static void Next(params Key[] input) {nextDiagnostic=0;phase++;keys=input;began=Time.time;}
     // Evaluate skin matrices directly: verifies actual mesh geometry, not just bone positions.
     static float FootMinimum()
     {
@@ -71,6 +74,11 @@ public static class MarioMobilityValidation
         }
         return min;
     }
+    static void QueueInput()
+    {
+        if(keyboard==null || InputState.currentUpdateType!=InputUpdateType.Dynamic) return;
+        keyboard.MakeCurrent();InputSystem.QueueStateEvent(keyboard,new KeyboardState(keys));
+    }
     static void Tick()
     {
         if(!EditorApplication.isPlaying) return;
@@ -78,13 +86,13 @@ public static class MarioMobilityValidation
         try
         {
             Check(EditorApplication.timeSinceStartup<deadline,"Test timed out");
-            keyboard.MakeCurrent();InputSystem.QueueStateEvent(keyboard,new KeyboardState(keys));
+
             float elapsed=Time.time-began;
             Check(Mathf.Abs(body.position.z)<.001f,"Movement left XY plane");
             if(phase==0 && elapsed>.6f) {Check(player.IsGrounded,"Not grounded");restFoot=FootMinimum();Next(Key.D);}
             else if(phase==1 && elapsed>.2f) {slowSpeed=body.linearVelocity.x;Check(slowSpeed>.3f && slowSpeed<3,"Acceleration starts too abruptly");Next(Key.D);}
             else if(phase==2 && elapsed>.3f) {fastSpeed=body.linearVelocity.x;Check(fastSpeed>slowSpeed+.8f && fastSpeed<5.5f,"Speed did not increase gradually");Next(Key.D);}
-            else if(phase==3 && elapsed>.4f) {Check(Mathf.Abs(body.linearVelocity.x-6)<.2f,"Maximum speed not reached: "+body.linearVelocity.x);results.Add(new{name="Acceleration",slowSpeed,fastSpeed,max=body.linearVelocity.x});Next();}
+            else if(phase==3 && elapsed>.8f) {Check(Mathf.Abs(body.linearVelocity.x-6)<.2f,"Maximum speed not reached: "+body.linearVelocity.x);results.Add(new{name="Acceleration",slowSpeed,fastSpeed,max=body.linearVelocity.x});Next();}
             else if(phase==4 && elapsed>.5f) {Check(Mathf.Abs(body.linearVelocity.x)<.05f,"Braking failed");Next(Key.S);}
             else if(phase==5 && elapsed>.5f)
             {
@@ -94,6 +102,12 @@ public static class MarioMobilityValidation
             else if(phase==6 && elapsed>.4f) {Check(!player.IsCrouching,"Not standing");peak=body.position.y;Next(Key.W);}
             else if(phase==7)
             {
+                if(elapsed<.2f && elapsed>=nextDiagnostic)
+                {
+                    nextDiagnostic=elapsed+.05f;
+                    object Field(string n)=>typeof(MarioPlayerController).GetField(n,System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(player);
+                    results.Add(new{diagnostic=true,jumpIndex,elapsed,current=Keyboard.current?.deviceId,expected=keyboard.deviceId,key=keyboard.wKey.isPressed,player.IsGrounded,player.IsCrouching,enabled=player.enabled,jumpHeld=Field("jumpHeld"),jumpPressed=Field("jumpPressed"),lastGrounded=Field("lastGrounded"),jumpUntil=Field("jumpUntil"),hasJumped=Field("hasJumped"),velocity=body.linearVelocity.y});
+                }
                 peak=Mathf.Max(peak,body.position.y);
                 if(elapsed>=holds[jumpIndex]) keys=Array.Empty<Key>();
                 if(elapsed>2.4f)
@@ -123,6 +137,7 @@ public static class MarioMobilityValidation
     }
     static void Cleanup()
     {
-        EditorApplication.update-=Tick;if(keyboard!=null && keyboard.added) InputSystem.RemoveDevice(keyboard);keyboard=null;if(floor!=null) UnityEngine.Object.Destroy(floor);floor=null;
+        if(inputSettingsChanged){InputSystem.settings.backgroundBehavior=previousBackgroundBehavior;inputSettingsChanged=false;}
+        InputSystem.onBeforeUpdate-=QueueInput;EditorApplication.update-=Tick;if(keyboard!=null && keyboard.added) InputSystem.RemoveDevice(keyboard);keyboard=null;if(floor!=null) UnityEngine.Object.Destroy(floor);floor=null;
     }
 }

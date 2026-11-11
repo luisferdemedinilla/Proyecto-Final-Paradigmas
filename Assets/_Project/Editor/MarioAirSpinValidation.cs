@@ -12,6 +12,8 @@ public static class MarioAirSpinValidation
 {
     const string Session="MarioAirSpin.Validation";
     static Keyboard keyboard;
+    static InputSettings.BackgroundBehavior previousBackgroundBehavior;
+    static bool inputSettingsChanged;
     static MarioPlayerController player;
     static Rigidbody body;
     static GameObject floor;
@@ -37,12 +39,13 @@ public static class MarioAirSpinValidation
         if(!SessionState.GetBool(Session,false)) return;
         if(state==PlayModeStateChange.EnteredPlayMode)
         {
+            previousBackgroundBehavior=InputSystem.settings.backgroundBehavior;InputSystem.settings.backgroundBehavior=InputSettings.BackgroundBehavior.IgnoreFocus;inputSettingsChanged=true;
             Application.runInBackground=true;player=GameObject.Find("Actors/Mario").GetComponent<MarioPlayerController>();body=player.GetComponent<Rigidbody>();
             floor=GameObject.CreatePrimitive(PrimitiveType.Cube);floor.name="Temporary mobility test floor";floor.transform.position=new Vector3(-40,-.5f,0);floor.transform.localScale=new Vector3(50,1,6);
             body.position=new Vector3(-40,.1f,0);body.linearVelocity=Vector3.zero;Physics.SyncTransforms();
-            spinRoot=player.GetComponentsInChildren<Transform>().Single(t=>t.name=="skl_root");rootRest=spinRoot.localRotation;
+            spinRoot=player.GetComponentsInChildren<Transform>().Single(t=>t.name=="skl_root" || t.name=="AllRoot");rootRest=spinRoot.localRotation;
             keyboard=InputSystem.AddDevice<Keyboard>();keyboard.MakeCurrent();phase=0;nextSample=0;began=Time.time;deadline=EditorApplication.timeSinceStartup+75;firstFrame=Time.frameCount;
-            results.Clear();keys=Array.Empty<Key>();EditorApplication.update-=Tick;EditorApplication.update+=Tick;
+            results.Clear();keys=Array.Empty<Key>();InputSystem.onBeforeUpdate-=QueueInput;InputSystem.onBeforeUpdate+=QueueInput;EditorApplication.update-=Tick;EditorApplication.update+=Tick;
         }
         if(state==PlayModeStateChange.ExitingPlayMode) Cleanup();
         if(state==PlayModeStateChange.EnteredEditMode)
@@ -51,6 +54,11 @@ public static class MarioAirSpinValidation
         }
     }
     static void Next(params Key[] input) {phase++;keys=input;began=Time.time;}
+    static void QueueInput()
+    {
+        if(keyboard==null || InputState.currentUpdateType!=InputUpdateType.Dynamic) return;
+        keyboard.MakeCurrent();InputSystem.QueueStateEvent(keyboard,new KeyboardState(keys));
+    }
     static void Tick()
     {
         if(!EditorApplication.isPlaying) return;
@@ -58,7 +66,7 @@ public static class MarioAirSpinValidation
         try
         {
             Check(EditorApplication.timeSinceStartup<deadline,"Test timed out, phase="+phase);
-            keyboard.MakeCurrent();InputSystem.QueueStateEvent(keyboard,new KeyboardState(keys));
+
             float elapsed=Time.time-began;
             if(phase==3 && elapsed>=nextSample) {results.Add(new {elapsed,player.IsAirSpinning,normalized=player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime,angle=Quaternion.Angle(rootRest,spinRoot.localRotation),velocity=body.linearVelocity.y});nextSample=elapsed+.05f;}
             if(phase==3 && elapsed>1) throw new Exception("Spin animation did not advance");
@@ -116,6 +124,7 @@ public static class MarioAirSpinValidation
     }
     static void Cleanup()
     {
-        EditorApplication.update-=Tick;if(keyboard!=null && keyboard.added) InputSystem.RemoveDevice(keyboard);keyboard=null;if(floor!=null) UnityEngine.Object.Destroy(floor);floor=null;
+        if(inputSettingsChanged){InputSystem.settings.backgroundBehavior=previousBackgroundBehavior;inputSettingsChanged=false;}
+        InputSystem.onBeforeUpdate-=QueueInput;EditorApplication.update-=Tick;if(keyboard!=null && keyboard.added) InputSystem.RemoveDevice(keyboard);keyboard=null;if(floor!=null) UnityEngine.Object.Destroy(floor);floor=null;
     }
 }

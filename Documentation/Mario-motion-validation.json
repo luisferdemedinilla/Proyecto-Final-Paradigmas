@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "date": "2026-11-11",
+  "results": [
+    {
+      "character": "Mario",
+      "frames": 2404,
+      "maxHorizontalSpeed": 6.0,
+      "unexpectedAirStatesWhileRunning": 0,
+      "poundPhases": {
+        "1": [
+          "GroundPoundStart"
+        ],
+        "2": [
+          "GroundPoundFall"
+        ],
+        "3": [
+          "GroundPoundLand"
+        ]
+      },
+      "finalState": "Run"
+    },
+    {
+      "character": "Luigi",
+      "frames": 2511,
+      "maxHorizontalSpeed": 6.0,
+      "unexpectedAirStatesWhileRunning": 0,
+      "poundPhases": {
+        "1": [
+          "GroundPoundStart"
+        ],
+        "2": [
+          "GroundPoundFall"
+        ],
+        "3": [
+          "GroundPoundLand"
+        ]
+      },
+      "finalState": "Run"
+    },
+    {
+      "character": "Toad",
+      "frames": 2585,
+      "maxHorizontalSpeed": 6.0,
+      "unexpectedAirStatesWhileRunning": 0,
+      "poundPhases": {
+        "1": [
+          "GroundPoundStart"
+        ],
+        "2": [
+          "GroundPoundFall"
+        ],
+        "3": [
+          "GroundPoundLand"
+        ]
+      },
+      "finalState": "Run"
+    }
+  ]
+}

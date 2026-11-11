@@ -1,0 +1,439 @@
+{
+  "library": {
+    "passed": true,
+    "resources": 5850,
+    "prefabs": 436,
+    "renderers": 1787,
+    "issues": [],
+    "clips": [
+      {
+        "name": "Mario",
+        "state": "Idle",
+        "minimum": -1.96695328e-05,
+        "maximum": 1.76091647,
+        "motion": 9.975491,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Mario",
+        "state": "Walk",
+        "minimum": -2.38418579e-07,
+        "maximum": 1.802459,
+        "motion": 66.9193649,
+        "spinTravel": 6.23527431
+      },
+      {
+        "name": "Mario",
+        "state": "Run",
+        "minimum": -0.004274428,
+        "maximum": 1.75698471,
+        "motion": 124.526642,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Mario",
+        "state": "Jump",
+        "minimum": -0.07897842,
+        "maximum": 1.80385447,
+        "motion": 128.783661,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Mario",
+        "state": "Fall",
+        "minimum": -0.131202877,
+        "maximum": 1.61926293,
+        "motion": 74.31329,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Mario",
+        "state": "Crouch",
+        "minimum": 5.96046448e-08,
+        "maximum": 1.12454629,
+        "motion": 93.58679,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Mario",
+        "state": "AirSpin",
+        "minimum": -0.129784763,
+        "maximum": 1.82600522,
+        "motion": 71.36523,
+        "spinTravel": 359.9989
+      },
+      {
+        "name": "Luigi",
+        "state": "Idle",
+        "minimum": -3.42130661e-05,
+        "maximum": 1.94398594,
+        "motion": 9.975491,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Luigi",
+        "state": "Walk",
+        "minimum": -1.78813934e-07,
+        "maximum": 1.99168062,
+        "motion": 66.9193649,
+        "spinTravel": 6.23527431
+      },
+      {
+        "name": "Luigi",
+        "state": "Run",
+        "minimum": -0.00419008732,
+        "maximum": 1.94650149,
+        "motion": 124.526642,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Luigi",
+        "state": "Jump",
+        "minimum": -0.0794224739,
+        "maximum": 1.86637163,
+        "motion": 132.681076,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Luigi",
+        "state": "Fall",
+        "minimum": -0.13428247,
+        "maximum": 1.82320166,
+        "motion": 82.89916,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Luigi",
+        "state": "Crouch",
+        "minimum": 0.0,
+        "maximum": 1.23600864,
+        "motion": 93.58679,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Luigi",
+        "state": "AirSpin",
+        "minimum": -0.132293046,
+        "maximum": 1.98939633,
+        "motion": 71.36523,
+        "spinTravel": 359.9989
+      },
+      {
+        "name": "Toad",
+        "state": "Idle",
+        "minimum": -1.06096268e-05,
+        "maximum": 1.64849043,
+        "motion": 9.975491,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Toad",
+        "state": "Walk",
+        "minimum": -1.1920929e-07,
+        "maximum": 1.71612144,
+        "motion": 66.9193649,
+        "spinTravel": 6.23527431
+      },
+      {
+        "name": "Toad",
+        "state": "Run",
+        "minimum": -0.003861785,
+        "maximum": 1.71104,
+        "motion": 124.526642,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Toad",
+        "state": "Jump",
+        "minimum": -0.104816437,
+        "maximum": 1.63620257,
+        "motion": 128.783661,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Toad",
+        "state": "Fall",
+        "minimum": -0.1249603,
+        "maximum": 1.577718,
+        "motion": 74.31329,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Toad",
+        "state": "Crouch",
+        "minimum": 0.0,
+        "maximum": 1.28790641,
+        "motion": 93.58679,
+        "spinTravel": 0.0
+      },
+      {
+        "name": "Toad",
+        "state": "AirSpin",
+        "minimum": -0.148776531,
+        "maximum": 1.61104679,
+        "motion": 71.36523,
+        "spinTravel": 359.9989
+      }
+    ]
+  },
+  "playMode": {
+    "Mario": {
+      "mobility": {
+        "passed": true,
+        "error": null,
+        "frames": 11982,
+        "results": [
+          {
+            "name": "Acceleration",
+            "slowSpeed": 1.30569935,
+            "fastSpeed": 3.26424837,
+            "max": 5.97057
+          },
+          {
+            "name": "Crouch feet",
+            "restFoot": -1.48169548e-07,
+            "foot": -8.618255e-08
+          },
+          {
+            "name": "Jump",
+            "held": 0.04,
+            "height": 1.08120012
+          },
+          {
+            "name": "Jump",
+            "held": 0.15,
+            "height": 1.95063519
+          },
+          {
+            "name": "Jump",
+            "held": 0.35,
+            "height": 3.65371728
+          },
+          {
+            "name": "Jump",
+            "held": 1.0,
+            "height": 3.65371728
+          }
+        ]
+      },
+      "spin": {
+        "passed": true,
+        "error": null,
+        "frames": 3233,
+        "results": [
+          {
+            "elapsed": 0.001316309,
+            "IsAirSpinning": false,
+            "normalized": 0.2257802,
+            "angle": 0.0,
+            "velocity": -3.1567986
+          },
+          {
+            "elapsed": 0.05141568,
+            "IsAirSpinning": true,
+            "normalized": 0.0697435662,
+            "angle": 7.12443829,
+            "velocity": -1.5
+          },
+          {
+            "elapsed": 0.102497935,
+            "IsAirSpinning": true,
+            "normalized": 0.1832598,
+            "angle": 32.1737175,
+            "velocity": -1.5
+          },
+          {
+            "name": "Descending spin",
+            "beforeFall": -3.1567986,
+            "slowed": -1.5,
+            "angle": 59.35913
+          },
+          {
+            "name": "One spin per jump; normal fall restored",
+            "passed": true
+          },
+          {
+            "name": "Landing resets availability; Space activates ascending spin",
+            "passed": true
+          },
+          {
+            "name": "Respawn cancels spin; falling without jump cannot spin",
+            "passed": true
+          }
+        ]
+      }
+    },
+    "Luigi": {
+      "mobility": {
+        "passed": true,
+        "error": null,
+        "frames": 12060,
+        "results": [
+          {
+            "name": "Acceleration",
+            "slowSpeed": 1.30569935,
+            "fastSpeed": 3.26424837,
+            "max": 5.97057
+          },
+          {
+            "name": "Crouch feet",
+            "restFoot": 7.32604448e-08,
+            "foot": -7.644643e-08
+          },
+          {
+            "name": "Jump",
+            "held": 0.04,
+            "height": 1.08120012
+          },
+          {
+            "name": "Jump",
+            "held": 0.15,
+            "height": 2.14227915
+          },
+          {
+            "name": "Jump",
+            "held": 0.35,
+            "height": 3.65371585
+          },
+          {
+            "name": "Jump",
+            "held": 1.0,
+            "height": 3.65371585
+          }
+        ]
+      },
+      "spin": {
+        "passed": true,
+        "error": null,
+        "frames": 3263,
+        "results": [
+          {
+            "elapsed": 0.00146484375,
+            "IsAirSpinning": false,
+            "normalized": 0.2264962,
+            "angle": 0.0,
+            "velocity": -3.1567986
+          },
+          {
+            "elapsed": 0.0521297455,
+            "IsAirSpinning": true,
+            "normalized": 0.07084556,
+            "angle": 7.257099,
+            "velocity": -1.5
+          },
+          {
+            "elapsed": 0.102483273,
+            "IsAirSpinning": true,
+            "normalized": 0.182742238,
+            "angle": 32.0061722,
+            "velocity": -1.5
+          },
+          {
+            "name": "Descending spin",
+            "beforeFall": -3.1567986,
+            "slowed": -1.5,
+            "angle": 56.3453445
+          },
+          {
+            "name": "One spin per jump; normal fall restored",
+            "passed": true
+          },
+          {
+            "name": "Landing resets availability; Space activates ascending spin",
+            "passed": true
+          },
+          {
+            "name": "Respawn cancels spin; falling without jump cannot spin",
+            "passed": true
+          }
+        ]
+      }
+    },
+    "Toad": {
+      "mobility": {
+        "passed": true,
+        "error": null,
+        "frames": 11984,
+        "results": [
+          {
+            "name": "Acceleration",
+            "slowSpeed": 1.30569935,
+            "fastSpeed": 3.26424837,
+            "max": 5.97057
+          },
+          {
+            "name": "Crouch feet",
+            "restFoot": -1.13126525e-07,
+            "foot": -3.9497408e-08
+          },
+          {
+            "name": "Jump",
+            "held": 0.04,
+            "height": 1.08119977
+          },
+          {
+            "name": "Jump",
+            "held": 0.15,
+            "height": 1.95063508
+          },
+          {
+            "name": "Jump",
+            "held": 0.35,
+            "height": 3.653726
+          },
+          {
+            "name": "Jump",
+            "held": 1.0,
+            "height": 3.653726
+          }
+        ]
+      },
+      "spin": {
+        "passed": true,
+        "error": null,
+        "frames": 3177,
+        "results": [
+          {
+            "elapsed": 0.0015130043,
+            "IsAirSpinning": false,
+            "normalized": 0.226342142,
+            "angle": 0.0,
+            "velocity": -3.1567986
+          },
+          {
+            "elapsed": 0.05151379,
+            "IsAirSpinning": true,
+            "normalized": 0.0721138,
+            "angle": 7.409612,
+            "velocity": -1.5
+          },
+          {
+            "elapsed": 0.101888418,
+            "IsAirSpinning": true,
+            "normalized": 0.184057325,
+            "angle": 32.43202,
+            "velocity": -1.5
+          },
+          {
+            "name": "Descending spin",
+            "beforeFall": -3.1567986,
+            "slowed": -1.5,
+            "angle": 57.2408371
+          },
+          {
+            "name": "One spin per jump; normal fall restored",
+            "passed": true
+          },
+          {
+            "name": "Landing resets availability; Space activates ascending spin",
+            "passed": true
+          },
+          {
+            "name": "Respawn cancels spin; falling without jump cannot spin",
+            "passed": true
+          }
+        ]
+      }
+    }
+  }
+}

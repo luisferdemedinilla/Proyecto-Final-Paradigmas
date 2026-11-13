@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "error": null,
+  "results": [
+    "Head hit releases coin and leaves a solid empty block",
+    "Repeated hit does not release another item",
+    "Released coin can be collected",
+    "Ordinary landing keeps question block intact",
+    "Side contact does not activate block",
+    "Ground pound releases coin and converts block to empty",
+    "Empty replacement remains solid after ground pound",
+    "ResetBlock restores question state and clears content",
+    "Standalone BlockEmpty has one solid collider and supports player"
+  ],
+  "frames": 2615,
+  "charactersAndScenesUnchanged": true
+}

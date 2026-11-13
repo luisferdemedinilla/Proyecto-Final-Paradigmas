@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "error": null,
+  "results": [
+    "Upward head hit breaks brick and removes collision",
+    "Destruction animation moves fragments",
+    "Fragments finish and ResetBlock restores brick",
+    "Ordinary landing does not break brick",
+    "Side contact does not break brick",
+    "Ground pound breaks brick from above"
+  ],
+  "impacts": [
+    {
+      "GroundPoundPhase": 0,
+      "PrePhysicsVerticalSpeed": 5.01519871,
+      "y": 10.3475094,
+      "normal": "(0.00, 1.00, 0.00)",
+      "feet": 10.3475094,
+      "top": 12.1
+    },
+    {
+      "GroundPoundPhase": 0,
+      "PrePhysicsVerticalSpeed": -6.531598,
+      "y": 11.0343237,
+      "normal": "(0.00, -1.00, 0.00)",
+      "feet": 11.0343237,
+      "top": 11.0306559
+    },
+    {
+      "GroundPoundPhase": 0,
+      "PrePhysicsVerticalSpeed": -4.76837158e-06,
+      "y": 10.0,
+      "normal": "(1.00, 0.00, 0.00)",
+      "feet": 10.0,
+      "top": 11.0306559
+    },
+    {
+      "GroundPoundPhase": 3,
+      "PrePhysicsVerticalSpeed": -18.1962,
+      "y": 11.0324087,
+      "normal": "(0.00, -1.00, 0.00)",
+      "feet": 11.0324087,
+      "top": 10.0
+    }
+  ],
+  "charactersUnchanged": true
+}

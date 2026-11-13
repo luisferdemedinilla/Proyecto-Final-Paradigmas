@@ -10,6 +10,8 @@ public sealed class GoombaEnemy:MonoBehaviour
     public bool IsDefeated {get;private set;}
     public bool IsChasing {get;private set;}
     public bool IsBlocked {get;private set;}
+    public void Configure(MarioPlayerController player, float left, float right)
+    { target = player; patrolLeft = left; patrolRight = right; }
     readonly RaycastHit[] probeHits=new RaycastHit[16];
     Rigidbody body;BoxCollider hitbox;Animator animator;Vector3 initialPosition;bool stopped;int direction=-1;float hideAt;
     void Awake(){body=GetComponent<Rigidbody>();hitbox=GetComponent<BoxCollider>();animator=GetComponent<Animator>();initialPosition=transform.position;if(visual==null)visual=transform.Find("Visual");animator.applyRootMotion=false;}

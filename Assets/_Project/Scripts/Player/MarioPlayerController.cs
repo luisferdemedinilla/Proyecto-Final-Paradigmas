@@ -74,6 +74,7 @@ public sealed class MarioPlayerController : MonoBehaviour
     public int GroundPoundPhase => poundPhase;
     public float PrePhysicsVerticalSpeed {get;private set;}
     public event System.Action Damaged;
+    public bool AllowManualRespawn { get; set; } = true;
     public void TakeHit(){Damaged?.Invoke();}
     public void ResetToSpawn(){Respawn();}
     public void BounceOffEnemy(float speed)
@@ -133,7 +134,7 @@ public sealed class MarioPlayerController : MonoBehaviour
         if(!jumpHeld) sustainingJump=false;
         if(!previouslyHeld && (Pressed(keyboard,jumpKey)||Pressed(keyboard,alternateJumpKey))) jumpPressed=true;
         if(Pressed(keyboard,crouchKey)) poundRequested=true;
-        if(Pressed(keyboard,respawnKey)) respawnRequested=true;
+        if(AllowManualRespawn && Pressed(keyboard,respawnKey)) respawnRequested=true;
     }
     void OnApplicationFocus(bool focus)
     {

@@ -15,7 +15,7 @@ namespace Creator
         GameObject world;
         Camera gameCamera;
         MarioPlayerController player;
-        LevelData currentLevel;
+        LevelInformation currentLevel;
         TextMeshProUGUI status;
         bool playing, finished;
         int coins, pageIndex;
@@ -111,7 +111,7 @@ namespace Creator
         {
             try
             {
-                var data = JsonUtility.FromJson<LevelData>(File.ReadAllText(path));
+                var data = JsonUtility.FromJson<LevelInformation>(File.ReadAllText(path));
                 var board = new CreatorBoard(creator.pieces);
                 if(!board.Load(data)) { status.text = "Este archivo no contiene un nivel compatible."; return; }
                 if(board.Start==null) { status.text = "Este nivel necesita un personaje. Añádelo desde el creador."; return; }

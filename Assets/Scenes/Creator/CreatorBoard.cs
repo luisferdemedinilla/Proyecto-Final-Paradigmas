@@ -8,15 +8,54 @@ public class CreatorBoard
 {
     public const int Columns = 28;
     public const int Rows = 8;
-    readonly Dictionary<string, Piece> catalog;
-    readonly List<Placement> placements = new List<Placement>();
-    readonly Stack<List<Placement>> history = new Stack<List<Placement>>();
-    public IReadOnlyList<Placement> Placements => placements;
+    private Dictionary<string, Piece> optionPieces;
+    public List<Placement> Placements { get; private set; } = new List<Placement>(); //saving the pieces we choose
 
-    public CreatorBoard(IEnumerable<Piece> pieces) { catalog = pieces.ToDictionary(p => p.id); }
-    public Piece Definition(Placement placement) => catalog[placement.pieceId];
-    public int Height(Piece piece) => piece.category == Category.Characters ? 2 : 1;
-    public Placement At(int x, int y) => placements.Find(p => p.x == x && y >= p.y && y < p.y + Height(Definition(p)));
+    public CreatorBoard(List<Piece> pieces) 
+    { 
+        optionPieces = new Dictionary<string, Piece>();
+        
+        foreach(Piece piece in pieces)
+        {
+            optionPieces.Add(piece.id, piece);
+        }
+    
+    }
+
+    public Piece Definition(Placement placement)  //For the object that we set on screen we return the information from Piece
+    {
+        return optionPieces[placement.pieceId];  // we search by Id
+    }
+    public int Height(Piece piece)  //how tall is each block
+    {
+        if (piece.category == Category.Characters) //main characters are 2 blocks tall
+        {
+            return 2;
+        }
+        return 1;
+    }
+    public Placement Position(int x, int y)  //returns what Placemnt is in each position
+    {
+        foreach (Placement placement in Placements)
+        {
+            {
+                if (placement.x == x)
+                {
+                    int altura = Height(Definition(placement));
+
+                    if (y >= placement.y && y < placement.y + altura)  //In case some characters have heigth 2
+                    {
+                        return placement;
+                    }
+                }
+            }
+
+            return null;
+
+        }
+
+    }
+
     public Placement Start => placements.Find(p => Definition(p).category == Category.Characters);
     public Placement Goal => placements.Find(p => Definition(p).isGoal);
     public bool CanUndo => history.Count > 0;

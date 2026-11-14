@@ -9,15 +9,4 @@ public class Placement
     public int column;
     public int row;
 
-    public Placement Copy()  
-    {
-        Placement copia = new Placement();
-
-        copia.pieceId = pieceId;
-        copia.column = column;
-        copia.row = row;
-
-        return copia;
-    }
-
 }

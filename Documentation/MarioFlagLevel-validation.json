@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "error": null,
+  "results": [
+    "Four platforms of eight gameplay blocks",
+    "Optional coin collects without ending level",
+    "Goomba side contact loses",
+    "Keyboard retry restores player enemy coin and goal",
+    "Stomp still defeats Goomba",
+    "Continuous keyboard traversal reaches pole across all gaps",
+    "Flag descends while character holds pole",
+    "Lowered flag completes level once",
+    "Goal retry restores gameplay controller and flag",
+    "Broken bricks restore on retry",
+    "Question block and its content restore on retry",
+    "Falling loses and retry succeeds"
+  ],
+  "frames": 6067,
+  "existingScenesScriptsAndCharacterPrefabsUnchanged": true,
+  "date": "2026-11-14"
+}

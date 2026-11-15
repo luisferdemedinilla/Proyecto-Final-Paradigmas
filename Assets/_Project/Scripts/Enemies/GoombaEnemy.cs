@@ -1,7 +1,7 @@
 using UnityEngine;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Rigidbody),typeof(BoxCollider),typeof(Animator))]
-public sealed class GoombaEnemy:MonoBehaviour
+public sealed class GoombaEnemy:MonoBehaviour, ILevelResettable
 {
     [SerializeField] MarioPlayerController target;
     [SerializeField] Transform visual;
@@ -56,5 +56,5 @@ public sealed class GoombaEnemy:MonoBehaviour
         animator.speed=1;animator.Play("Defeated",0,0);hideAt=Time.time+.5f;
     }
     public void SetStopped(bool value){stopped=value;animator.speed=value?0:1;if(value&&!body.isKinematic)body.linearVelocity=Vector3.zero;body.isKinematic=value||IsDefeated;}
-    public void RestartEnemy(){IsDefeated=false;stopped=false;IsBlocked=false;direction=-1;visual.gameObject.SetActive(true);hitbox.enabled=true;body.isKinematic=false;body.position=initialPosition;body.linearVelocity=Vector3.zero;animator.speed=1;animator.Play("Walk",0,0);}
+    public void ResetForLevel(){IsDefeated=false;stopped=false;IsBlocked=false;direction=-1;visual.gameObject.SetActive(true);hitbox.enabled=true;body.isKinematic=false;body.position=initialPosition;body.linearVelocity=Vector3.zero;animator.speed=1;animator.Play("Walk",0,0);}
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(BoxCollider))]
-public sealed class QuestionBlock : MonoBehaviour
+public sealed class QuestionBlock : MonoBehaviour, ILevelResettable
 {
     [SerializeField] GameObject questionVisual;
     [SerializeField] GameObject emptyVisual;
@@ -11,21 +11,19 @@ public sealed class QuestionBlock : MonoBehaviour
     public bool IsEmpty {get;private set;}
     public GameObject SpawnedContent {get;private set;}
     BoxCollider hitbox;
-    void Awake(){hitbox=GetComponent<BoxCollider>();ResetBlock();}
-    void OnCollisionEnter(Collision collision){CheckHit(collision);}
-    void OnCollisionStay(Collision collision){CheckHit(collision);}
-    void CheckHit(Collision collision)
+    void Awake(){hitbox=GetComponent<BoxCollider>(); ResetForLevel();}
+    void OnCollisionEnter(Collision collision){
+        if (!IsEmpty)
+        {
+            if (BlockHitDetector.CheckHit(collision, hitbox)) ReleaseContent();
+        }
+    }
+    void OnCollisionStay(Collision collision)
     {
-        if(IsEmpty)return;
-        var player=collision.collider.GetComponentInParent<MarioPlayerController>();
-        if(player==null || !player.enabled)return;
-        var bounds=hitbox.bounds;var playerBounds=player.GetComponent<CapsuleCollider>().bounds;
-        bool vertical=false;
-        for(int i=0;i<collision.contactCount;i++)if(Mathf.Abs(collision.GetContact(i).normal.y)>.6f)vertical=true;
-        if(!vertical)return;
-        bool below=player.PrePhysicsVerticalSpeed>.1f && playerBounds.center.y<bounds.center.y && playerBounds.max.y<=bounds.min.y+.2f;
-        bool pound=(player.GroundPoundPhase==2 || player.GroundPoundPhase==3) && player.PrePhysicsVerticalSpeed<-.1f && playerBounds.center.y>bounds.center.y && playerBounds.min.y>=bounds.max.y-.2f;
-        if(below || pound)ReleaseContent();
+        if (!IsEmpty)
+        {
+            if (BlockHitDetector.CheckHit(collision, hitbox)) ReleaseContent();
+        }
     }
     void ReleaseContent()
     {
@@ -40,7 +38,7 @@ public sealed class QuestionBlock : MonoBehaviour
         {if(!renderer.enabled)continue;if(!found){contentBounds=renderer.bounds;found=true;}else contentBounds.Encapsulate(renderer.bounds);}
         if(found)SpawnedContent.transform.position+=Vector3.up*(origin.y-contentBounds.min.y);
     }
-    public void ResetBlock()
+    public void ResetForLevel()
     {
         if(SpawnedContent!=null)Destroy(SpawnedContent);
         SpawnedContent=null;IsEmpty=false;questionVisual.SetActive(true);emptyVisual.SetActive(false);

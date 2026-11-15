@@ -43,7 +43,7 @@ public sealed class DemoLevelController:MonoBehaviour
         // Teleport both representations before reenabling defeat checks. Otherwise
         // interpolation/transform synchronization can restore the old fall pose.
         player.transform.position=body.position;Physics.SyncTransforms();body.interpolation=interpolation;
-        player.enabled=true;player.GetComponent<Animator>().speed=1;goomba.RestartEnemy();goalCoin.ResetCoin();
+        player.enabled=true;player.GetComponent<Animator>().speed=1;goomba.ResetForLevel();goalCoin.ResetForLevel();
         resultPanel.SetActive(false);State=LevelState.Playing;
     }
 }

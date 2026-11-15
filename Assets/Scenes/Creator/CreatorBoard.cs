@@ -38,88 +38,152 @@ public class CreatorBoard
     {
         foreach (Placement placement in Placements)
         {
+            
+            if (placement.column == x)
             {
-                if (placement.x == x)
-                {
-                    int altura = Height(Definition(placement));
+                int altura = Height(Definition(placement));
 
-                    if (y >= placement.y && y < placement.y + altura)  //In case some characters have heigth 2
-                    {
-                        return placement;
-                    }
+                if (y >= placement.row && y < placement.row + altura)  //In case some characters have heigth 2
+                {
+                    return placement;
                 }
+               
             }
 
-            return null;
-
         }
+        return null;
 
     }
 
-    public Placement Start => placements.Find(p => Definition(p).category == Category.Characters);
-    public Placement Goal => placements.Find(p => Definition(p).isGoal);
-    public bool CanUndo => history.Count > 0;
-    static bool Inside(int x, int y) => x >= 0 && x < Columns && y >= 0 && y < Rows;
-    void Remember() { history.Push(placements.Select(p => p.Copy()).ToList()); }
-
-    public bool Place(string id, int x, int y)
+    public Placement GetStart()  //Seeing where we start the game
     {
-        if (!Inside(x, y) || !catalog.TryGetValue(id, out var piece)) return false;
+        
+        foreach (Placement placement in Placements)
+        {
+            if (Definition(placement).category == Category.Characters)  //Checking where the main character is
+            {
+                return placement;
+            }
+        }
+
+        return null;
+        
+    }
+
+    public Placement GetGoal()
+    {
+        
+        foreach (Placement placement in Placements)
+        {
+            if (Definition(placement).isGoal)  //When we reach the flag the game stops
+            {
+                return placement;
+            }
+        }
+
+        return null;
+        
+    }
+
+    private static bool Inside(int x, int y)  //stating the limits of the game
+    {
+        return x >= 0 && x < Columns && y >= 0 && y < Rows;
+    }
+
+
+    public bool Place(string id, int x, int y)   //it allows us to place the pieces in our screen
+    {
+        Piece piece = optionPieces[id];
+        
+
         int height = Height(piece);
-        if (y + height > Rows) return false;
-        var existing = At(x,y);
-        if (existing?.pieceId == id && existing.y == y) return false;
-        Remember();
-        placements.RemoveAll(p => (p.x == x && p.y < y + height && p.y + Height(Definition(p)) > y)
-            || (piece.category == Category.Characters && Definition(p).category == Category.Characters)
-            || (piece.isGoal && Definition(p).isGoal));
-        placements.Add(new Placement { pieceId = id, x = x, y = y });
+
+        if (y + height > Rows)  //We can't place pieces that are more than 1 block tall in the last row
+        {
+            return false;
+        }
+
+        for (int i = Placements.Count - 1; i >= 0; i--)  //we can only have one character and one goal
+        {
+            Placement placement = Placements[i];
+            Piece previousPiece = Definition(placement);  //what came before
+
+            bool samePosition = placement.column == x && placement.row < y + height && placement.row + Height(previousPiece) > y;
+
+            bool sameCharacter = piece.category == Category.Characters && previousPiece.category == Category.Characters;
+
+            bool sameGoal = piece.isGoal && previousPiece.isGoal;
+
+            if (samePosition || sameCharacter || sameGoal)  //if one of this requirements is met then we erase the existing piece for the new one
+            {
+                Placements.RemoveAt(i);
+            }
+        }
+
+        //We add the new piece
+        Placement newPlacement = new Placement();
+        newPlacement.pieceId = id;
+        newPlacement.column = x;
+        newPlacement.row = y;
+
+        Placements.Add(newPlacement);
+
         return true;
     }
 
     public bool Erase(int x, int y)
     {
-        var item = At(x, y);
-        if (item == null) return false;
-        Remember(); placements.Remove(item); return true;
-    }
+        Placement item = Position(x, y);
 
-    public void Undo()
-    {
-        if (!CanUndo) return;
-        placements.Clear(); placements.AddRange(history.Pop());
-    }
-
-    public LevelData Export() => new LevelData { placements = placements.Select(p => p.Copy()).ToList() };
-
-    public bool Load(LevelData data)
-    {
-        if (data == null || data.version != 1 || !new[]{Columns,32,42}.Contains(data.columns)
-            || (data.rows != Rows && data.rows != 7 && data.rows != 12) || data.placements == null) return false;
-        if (data.placements.Any(p=>p==null)) return false;
-        int offset = (Columns - data.columns) / 2;
-        if (data.placements.Count > 0)
+        if (item == null)
         {
-            int min = data.placements.Min(p=>p.x), max = data.placements.Max(p=>p.x);
-            if (max-min >= Columns) return false;
-            offset = Mathf.Clamp(offset, -min, Columns-1-max);
+            return false;
         }
-        var migrated = new List<Placement>();
-        var occupied = new HashSet<Vector2Int>();
-        int characters=0,goals=0;
-        foreach(var p in data.placements)
-        {
-            if(p.pieceId==null || !catalog.TryGetValue(p.pieceId,out var piece)
-                || p.x<0 || p.x>=data.columns || p.y<0 || p.y>=data.rows) return false;
-            var copy=p.Copy();copy.x+=offset;
-            int height=Height(piece);
-            for(int y=copy.y;y<copy.y+height;y++)
-                if(!Inside(copy.x,y) || !occupied.Add(new Vector2Int(copy.x,y)))return false;
-            if(piece.category==Category.Characters && ++characters>1)return false;
-            if(piece.isGoal && ++goals>1)return false;
-            migrated.Add(copy);
-        }
-        Remember();placements.Clear();placements.AddRange(migrated);return true;
+
+        Placements.Remove(item);
+        return true;
     }
+
+    public LevelInformation Export()
+    {
+        LevelInformation level = new LevelInformation();
+
+        foreach (Placement placement in Placements)
+        {
+            Placement newPlacement = new Placement();
+            newPlacement.pieceId = placement.pieceId;
+            newPlacement.column = placement.column;
+            newPlacement.row = placement.row;
+
+            level.placements.Add(newPlacement);
+        }
+
+        return level;
+    }
+
+    public bool Load(LevelInformation data)  //loading the game we saved to our current board
+
+    {
+        if (data == null || data.placements == null)  //if there's no information we can't load it
+        {
+            return false;
+        }
+
+        Placements.Clear();  //We need a new board
+
+        foreach (Placement placement in data.placements)
+        {
+            Placement nueva = new Placement();
+
+            nueva.pieceId = placement.pieceId;
+            nueva.column = placement.column;
+            nueva.row = placement.row;
+
+            Placements.Add(nueva);
+        }
+
+        return true;
+    }
+
 }
 

@@ -15,8 +15,8 @@ namespace Creator.Editor
             if(EditorApplication.isPlaying || scene.path!="Assets/Scenes/creator.unity") throw new InvalidOperationException("Open Creator outside Play mode.");
             var screen=UnityEngine.Object.FindAnyObjectByType<CreatorScreen>();
             screen.pieces=screen.pieces.Where(p=>p.category==Category.Characters ||
-                (p.category==Category.Blocks && new[]{"Brick","Brick Hard","Block Question"}.Contains(p.prefab.name)) ||
-                (p.category==Category.Enemies && p.prefab.name=="Goomba") ||
+                (p.category==Category.Blocks && new[]{"Brick","Brick Hard","Block Question"}.Contains(p.gameObject.name)) ||
+                (p.category==Category.Enemies && p.gameObject.name=="Goomba") ||
                 (p.category==Category.Extras && (p.isGoal || p.label=="Moneda"))).ToList();
             if(screen.pieces.Count!=11)throw new Exception("Expected exactly 11 pieces.");
             var canvas=screen.transform.Find("CreatorCanvas");
@@ -39,7 +39,7 @@ namespace Creator.Editor
             var backup="Temp/Creator/before-simplify.json";
             if(File.Exists(backup))
             {
-                var data=JsonUtility.FromJson<LevelData>(File.ReadAllText(backup));
+                var data=JsonUtility.FromJson<LevelInformation>(File.ReadAllText(backup));
                 data.placements.RemoveAll(p=>!screen.pieces.Any(d=>d.id==p.pieceId));
                 screen.initialDesign=JsonUtility.ToJson(data);
             }
@@ -50,7 +50,7 @@ namespace Creator.Editor
                 string path="Assets/Scenes/Creator/Thumbnails/"+piece.id+".png";
                 var importer=(TextureImporter)AssetImporter.GetAtPath(path);
                 importer.alphaIsTransparency=true;importer.mipmapEnabled=false;importer.sRGBTexture=true;importer.textureCompression=TextureImporterCompression.Uncompressed;importer.SaveAndReimport();
-                piece.thumbnail=AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                piece.image=AssetDatabase.LoadAssetAtPath<Texture2D>(path);
             }
             screen.BuildUI();
             EditorUtility.SetDirty(screen);EditorSceneManager.MarkSceneDirty(scene);EditorSceneManager.SaveScene(scene);
@@ -63,7 +63,7 @@ namespace Creator.Editor
             var materials=new System.Collections.Generic.List<Material>();
             try
             {
-                var go=(GameObject)PrefabUtility.InstantiatePrefab(piece.prefab,preview.camera.scene);preview.AddSingleGO(go);
+                var go=(GameObject)PrefabUtility.InstantiatePrefab(piece.gameObject,preview.camera.scene);preview.AddSingleGO(go);
                 foreach(var renderer in go.GetComponentsInChildren<Renderer>(true))
                     renderer.sharedMaterials=renderer.sharedMaterials.Select(m=>{if(m==null)return null;var copy=new Material(m);materials.Add(copy);return copy;}).ToArray();
                 go.transform.position=Vector3.zero;go.transform.rotation=Quaternion.identity;

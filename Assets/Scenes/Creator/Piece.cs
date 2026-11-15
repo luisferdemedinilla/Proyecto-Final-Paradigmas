@@ -9,6 +9,8 @@ public class Piece
     public string id, label;
     public Category category;  //Which category the piece belongs to
     public bool isGoal;   // if it ends the game
+    [UnityEngine.Serialization.FormerlySerializedAs("prefab")]
     public GameObject gameObject;
+    [UnityEngine.Serialization.FormerlySerializedAs("thumbnail")]
     public Texture2D image;  
 }

@@ -53,6 +53,8 @@ public sealed class MarioPlayerController : MonoBehaviour
     Rigidbody body;
     CapsuleCollider capsule;
     Animator animator;
+    MarioDamageForm damageForm;
+    float largeHeight,largeRadius;
     readonly RaycastHit[] groundHits=new RaycastHit[16];
     readonly Collider[] ceilingHits=new Collider[16];
     Vector3 standingCenter,visualRestPosition,startPosition;
@@ -75,7 +77,31 @@ public sealed class MarioPlayerController : MonoBehaviour
     public float PrePhysicsVerticalSpeed {get;private set;}
     public event System.Action Damaged;
     public bool AllowManualRespawn { get; set; } = true;
-    public void TakeHit(){Damaged?.Invoke();}
+    public bool IsSmall => damageForm != null && damageForm.IsSmall;
+    public void TakeHit()
+    {
+        bool wasSmall = IsSmall;
+        if (damageForm == null || !damageForm.AbsorbHit())
+        {
+            Damaged?.Invoke();
+            return;
+        }
+
+        if (!wasSmall)
+        {
+            CancelPound();
+            ResetAirSpin();
+            SetStandingSize(damageForm.SmallHeight, damageForm.SmallRadius);
+        }
+    }
+    public void GrowFromMushroom()
+    {
+        if (!IsSmall)
+            return;
+
+        damageForm.RestoreLargeForm();
+        SetStandingSize(largeHeight, largeRadius);
+    }
     public void ResetToSpawn(){Respawn();}
     public void BounceOffEnemy(float speed)
     {
@@ -101,8 +127,10 @@ public sealed class MarioPlayerController : MonoBehaviour
     void Awake()
     {
         body=GetComponent<Rigidbody>();capsule=GetComponent<CapsuleCollider>();animator=GetComponent<Animator>();
+        damageForm=GetComponent<MarioDamageForm>();
         if(visual==null) visual=transform.Find("Visual");
-        foreach(var bone in (visual==null?transform:visual).GetComponentsInChildren<Transform>(true))
+        Transform animationRig = damageForm == null ? visual : visual.Find("Model");
+        foreach(var bone in (animationRig==null?transform:animationRig).GetComponentsInChildren<Transform>(true))
         {
             if(bone.name=="AllRoot") {authoredAnimationRoot=bone;authoredRootRestRotation=bone.localRotation;}
             if(bone.name=="skl_root") {spinRoot=bone;spinRootRestRotation=bone.localRotation;}
@@ -112,6 +140,7 @@ public sealed class MarioPlayerController : MonoBehaviour
         if(leftAnkle!=null) leftAnkleRestY=transform.InverseTransformPoint(leftAnkle.position).y;
         if(rightAnkle!=null) rightAnkleRestY=transform.InverseTransformPoint(rightAnkle.position).y;
         standingHeight=capsule.height;standingCenter=capsule.center;
+        largeHeight=standingHeight;largeRadius=capsule.radius;
         if(visual!=null) visualRestPosition=visual.localPosition;
         startPosition=body.position;planeZ=body.position.z;
         body.constraints=RigidbodyConstraints.FreezePositionZ|RigidbodyConstraints.FreezeRotation;
@@ -208,7 +237,7 @@ public sealed class MarioPlayerController : MonoBehaviour
         bool crouch=wantsCrouch && IsGrounded && poundPhase==0;
         if(IsCrouching && !crouch && !CanStand()) crouch=true;
         IsCrouching=crouch;
-        capsule.height=crouch?Mathf.Clamp(crouchHeight,2*capsule.radius,standingHeight):standingHeight;
+        capsule.height=crouch?Mathf.Clamp(crouchHeight*standingHeight/largeHeight,2*capsule.radius,standingHeight):standingHeight;
         capsule.center=standingCenter+Vector3.up*((capsule.height-standingHeight)/2);
         var velocity=body.linearVelocity;
         float speed=crouch?crouchSpeed:(!requireRunKey || wantsRun)?runSpeed:walkSpeed;
@@ -275,10 +304,24 @@ public sealed class MarioPlayerController : MonoBehaviour
         // the whole character by a fixed distance before its knees have bent.
         visual.localPosition=visualRestPosition+Vector3.down*drop;
     }
+    void SetStandingSize(float height, float radius)
+    {
+        standingCenter += Vector3.up * ((height - standingHeight) / 2f);
+        standingHeight = height;
+        capsule.radius = radius;
+        capsule.height = height;
+        capsule.center = standingCenter;
+    }
+
     void Respawn()
     {
         CancelPound();
         ResetAirSpin();
+        if (damageForm != null)
+        {
+            damageForm.RestoreLargeForm();
+            SetStandingSize(largeHeight, largeRadius);
+        }
         respawnRequested=false;sustainingJump=false;IsCrouching=false;IsGrounded=false;jumpUntil=lastGrounded=-100;
         capsule.height=standingHeight;capsule.center=standingCenter;
         var point=spawnPoint==null?startPosition:spawnPoint.position;point.z=planeZ;

@@ -24,9 +24,19 @@ public static class FlagLevelValidation
  static void Tick(){EditorApplication.QueuePlayerLoopUpdate();try{float elapsed=Time.time-began;Check(EditorApplication.timeSinceStartup<deadline && elapsed<20,"Timeout");Check(Mathf.Abs(body.position.z)<.001f,"Player left XY plane");
  if(phase==0 && elapsed>.6f){Check(level.Enemies.Count>0,"Expected a Goomba in the flag level");testedGoomba=level.Enemies.OrderBy(enemy=>Mathf.Abs(enemy.transform.position.x-5f)).First();Check(player.IsGrounded,"Spawn unsupported");var platforms=GameObject.Find("Environment").transform;Check(platforms.childCount==4 && Enumerable.Range(0,4).All(i=>platforms.GetChild(i).childCount==8),"Expected four platforms of eight blocks");results.Add("Four platforms of eight gameplay blocks");Capture("start");Teleport(new Vector3(3,.05f,0),Vector3.zero);Next();}
  else if(phase==1 && elapsed>.2f){Check(level.Coin.Collected && level.State==FlagLevelController.LevelState.Playing,"Coin changed win condition");results.Add("Optional coin collects without ending level");var x=testedGoomba.transform.position.x;Teleport(new Vector3(x-.9f,.02f,0),Vector3.zero);Next(Key.D);}
- else if(phase==2 && level.State==FlagLevelController.LevelState.Lost){Check(level.Enemies.All(enemy=>enemy.GetComponent<Rigidbody>().isKinematic),"A Goomba did not stop on loss");results.Add("Goomba side contact loses and stops all Goombas");Next(Key.R);}
+ else if(phase==2 && player.IsSmall){
+  Check(level.State==FlagLevelController.LevelState.Playing && player.enabled,"The first hit ended the level");
+  player.TakeHit();Check(level.State==FlagLevelController.LevelState.Playing,"Repeated damage during invulnerability");
+  Capture("shrink");results.Add("Goomba side contact shrinks Mario and grants temporary invulnerability");
+  Teleport(new Vector3(1,.05f,0),Vector3.zero);keys=Array.Empty<Key>();phase=23;began=Time.time;
+ }
+ else if(phase==23 && elapsed>1.1f){
+  player.TakeHit();Check(level.State==FlagLevelController.LevelState.Lost,"Small Mario survived a second hit");
+  Check(level.Enemies.All(enemy=>enemy.GetComponent<Rigidbody>().isKinematic),"A Goomba did not stop on loss");
+  results.Add("A second hit loses and stops all Goombas");phase=2;Next(Key.R);
+ }
  else if(phase==3 && elapsed>.15f)Next();
- else if(phase==4 && elapsed>.5f){Check(level.State==FlagLevelController.LevelState.Playing && player.IsGrounded,"R did not restart");Check(level.Enemies.All(enemy=>!enemy.IsDefeated && !enemy.GetComponent<Rigidbody>().isKinematic),"A Goomba did not restart");results.Add("Keyboard retry restores the player and all Goombas");Teleport(new Vector3(testedGoomba.transform.position.x,testedGoomba.GetComponent<Collider>().bounds.max.y+.7f,0),Vector3.down*5);Next();}
+ else if(phase==4 && elapsed>.5f){Check(level.State==FlagLevelController.LevelState.Playing && player.IsGrounded && !player.IsSmall,"R did not restore large Mario");Check(level.Enemies.All(enemy=>!enemy.IsDefeated && !enemy.GetComponent<Rigidbody>().isKinematic),"A Goomba did not restart");results.Add("Keyboard retry restores large Mario and all Goombas");Teleport(new Vector3(testedGoomba.transform.position.x,testedGoomba.GetComponent<Collider>().bounds.max.y+.7f,0),Vector3.down*5);Next();}
  else if(phase==5 && testedGoomba.IsDefeated){Check(level.State==FlagLevelController.LevelState.Playing,"Stomp lost level");results.Add("Stomp still defeats Goomba");foreach(var enemy in level.Enemies)if(enemy!=testedGoomba)enemy.gameObject.SetActive(false);Teleport(new Vector3(1,.05f,0),Vector3.zero);Next();}
  else if(phase==6 && elapsed>.4f)Next(Key.D);
  else if(phase==7){float x=body.position.x;for(int gap=0;gap<3;gap++)if(!jumped[gap] && player.IsGrounded && x>=6f+gap*10 && x<7.5f+gap*10){jumped[gap]=true;jumpReleaseAt=Time.time+.32f;}keys=Time.time<jumpReleaseAt?new[]{Key.D,Key.W}:new[]{Key.D};Check(level.State!=FlagLevelController.LevelState.Lost,"Traversal fell into gap");if(level.State==FlagLevelController.LevelState.Finishing){Check(!player.enabled,"Controls still active at goal");results.Add("Continuous keyboard traversal reaches pole across all gaps");Capture("grab");Next();}}

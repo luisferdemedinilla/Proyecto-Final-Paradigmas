@@ -54,7 +54,14 @@ public static class MarioDemoValidation
    else if(phase==80 && elapsed>1.3f){Check(enemy.transform.position.x>18 && enemy.IsChasing && !enemy.IsBlocked,"Goomba stopped at patrol boundary");Record("Goomba chases beyond patrol boundary");Teleport(new Vector3(20.1f,.02f,0),Vector3.zero);enemy.GetComponent<Rigidbody>().position=new Vector3(19.05f,.02f,0);phase=82;began=Time.time;}
    else if(phase==82 && elapsed>.25f){Check(enemy.transform.position.x>19.25f && !enemy.IsBlocked,"Goomba stopped at seam beside wall");Record("Goomba crosses seam beside wall");level.RestartLevel();Teleport(new Vector3(7,.02f,0),Vector3.zero);enemy.GetComponent<Rigidbody>().position=new Vector3(10.1f,.02f,0);phase=81;began=Time.time;}
    else if(phase==81 && elapsed>.7f){Check(enemy.IsBlocked && enemy.transform.position.x>9.7f,"Goomba walked into the gap");Record("Goomba detects real gap");enemy.ResetForLevel();Teleport(new Vector3(13,.02f,0),Vector3.zero);phase=9;began=Time.time;keys=new[]{Key.D};}
-   else if(phase==9 && level.State==DemoLevelController.LevelState.Lost){Check(!enemy.IsDefeated && !player.enabled,"Side contact did not lose");Capture("defeat");Record("Side contact loses level");level.RestartLevel();Next();}
+   else if(phase==9 && player.IsSmall){
+    Check(level.State==DemoLevelController.LevelState.Playing && !enemy.IsDefeated,"Side contact did not shrink Mario");
+    Record("Side contact shrinks Mario");Teleport(new Vector3(7,.02f,0),Vector3.zero);keys=Array.Empty<Key>();phase=90;began=Time.time;
+   }
+   else if(phase==90 && elapsed>1.1f){
+    player.TakeHit();Check(level.State==DemoLevelController.LevelState.Lost && !player.enabled,"Second hit did not lose");
+    Capture("defeat");Record("Second hit loses level");level.RestartLevel();phase=9;Next();
+   }
    else if(phase==10 && elapsed>.3f){Check(level.State==DemoLevelController.LevelState.Playing && player.enabled && !level.GoalCoin.Collected && !enemy.IsDefeated,"Restart failed");Record("Restart restores level");var top=enemy.GetComponent<Collider>().bounds.max.y;Teleport(new Vector3(enemy.transform.position.x,top+.65f,0),Vector3.down*5);Next();}
    else if(phase==11 && enemy.IsDefeated){Check(level.State==DemoLevelController.LevelState.Playing && body.linearVelocity.y>0,"Stomp did not bounce safely");Capture("stomp");Record("Descending stomp defeats Goomba and bounces");Next();}
    else if(phase==12 && elapsed>.7f){Check(!enemy.transform.Find("Visual").gameObject.activeSelf,"Defeated Goomba not removed");Teleport(new Vector3(19,.02f,0),Vector3.zero);var coin=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(MarioDemoSetup.CoinPath),new Vector3(19,.8f,0),Quaternion.identity);ordinary=coin.GetComponent<CollectibleCoin>();Next();}

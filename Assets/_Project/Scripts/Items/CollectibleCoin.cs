@@ -1,13 +1,14 @@
 using System;
 using UnityEngine;
 [DisallowMultipleComponent]
-public sealed class CollectibleCoin:MonoBehaviour, ILevelResettable
+public sealed class CollectibleCoin:MonoBehaviour, ILevelResettable, ICollectibleItem
 {
     [SerializeField] Transform visual;
     [SerializeField] float degreesPerSecond=150;
     public bool Collected {get;private set;}
     public event Action<MarioPlayerController> CollectedBy;
-    Collider hitbox;Quaternion initialRotation;
+    Collider hitbox;
+    Quaternion initialRotation;
     void Awake(){hitbox=GetComponent<Collider>();if(visual==null)visual=transform.Find("Visual");initialRotation=visual.localRotation;}
     void Update(){if(!Collected)visual.Rotate(Vector3.up,degreesPerSecond*Time.deltaTime,Space.Self);}
     void OnTriggerEnter(Collider other){ MarioPlayerController p =other.GetComponentInParent<MarioPlayerController>();if(p!=null && p.enabled)Collect(p);}

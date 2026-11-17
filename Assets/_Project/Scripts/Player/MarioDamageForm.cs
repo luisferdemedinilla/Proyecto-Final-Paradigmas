@@ -28,6 +28,7 @@ public sealed class MarioDamageForm : MonoBehaviour
     float invulnerableUntil;
 
     public bool IsSmall { get; private set; }
+    public bool IsInvulnerable => Time.time < invulnerableUntil;
     public float SmallHeight => smallHeight;
     public float SmallRadius => smallRadius;
 
@@ -39,15 +40,20 @@ public sealed class MarioDamageForm : MonoBehaviour
 
     public bool AbsorbHit()
     {
-        if (Time.time < invulnerableUntil)
+        if (IsInvulnerable)
             return true;
         if (IsSmall)
             return false;
 
         SetSmall(true);
-        invulnerableUntil = Time.time + hitInvulnerability;
+        ProtectAfterHit();
         animator.Play("ShrinkHit", 0, 0f);
         return true;
+    }
+
+    public void ProtectAfterHit()
+    {
+        invulnerableUntil = Time.time + hitInvulnerability;
     }
 
     public void RestoreLargeForm()

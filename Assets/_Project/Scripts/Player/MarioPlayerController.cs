@@ -54,6 +54,7 @@ public sealed class MarioPlayerController : MonoBehaviour
     CapsuleCollider capsule;
     Animator animator;
     MarioDamageForm damageForm;
+    MarioFirePower firePower;
     float largeHeight,largeRadius;
     readonly RaycastHit[] groundHits=new RaycastHit[16];
     readonly Collider[] ceilingHits=new Collider[16];
@@ -78,8 +79,19 @@ public sealed class MarioPlayerController : MonoBehaviour
     public event System.Action Damaged;
     public bool AllowManualRespawn { get; set; } = true;
     public bool IsSmall => damageForm != null && damageForm.IsSmall;
+    public int Facing => facing;
     public void TakeHit()
     {
+        if (firePower != null && firePower.IsFire)
+        {
+            if (damageForm == null || !damageForm.IsInvulnerable)
+            {
+                firePower.LoseFireForm();
+                damageForm?.ProtectAfterHit();
+            }
+            return;
+        }
+
         bool wasSmall = IsSmall;
         if (damageForm == null || !damageForm.AbsorbHit())
         {
@@ -94,7 +106,7 @@ public sealed class MarioPlayerController : MonoBehaviour
             SetStandingSize(damageForm.SmallHeight, damageForm.SmallRadius);
         }
     }
-    public void GrowFromMushroom()
+    public void GrowToLargeForm()
     {
         if (!IsSmall)
             return;
@@ -102,6 +114,17 @@ public sealed class MarioPlayerController : MonoBehaviour
         damageForm.RestoreLargeForm();
         SetStandingSize(largeHeight, largeRadius);
     }
+
+    public bool TryGainFirePower(FireFlower flower)
+    {
+        if (firePower == null)
+            return false;
+
+        GrowToLargeForm();
+        firePower.EnableFireForm(flower);
+        return true;
+    }
+
     public void ResetToSpawn(){Respawn();}
     public void BounceOffEnemy(float speed)
     {
@@ -128,6 +151,7 @@ public sealed class MarioPlayerController : MonoBehaviour
     {
         body=GetComponent<Rigidbody>();capsule=GetComponent<CapsuleCollider>();animator=GetComponent<Animator>();
         damageForm=GetComponent<MarioDamageForm>();
+        firePower=GetComponent<MarioFirePower>();
         if(visual==null) visual=transform.Find("Visual");
         Transform animationRig = damageForm == null ? visual : visual.Find("Model");
         foreach(var bone in (animationRig==null?transform:animationRig).GetComponentsInChildren<Transform>(true))
@@ -317,6 +341,8 @@ public sealed class MarioPlayerController : MonoBehaviour
     {
         CancelPound();
         ResetAirSpin();
+        if (firePower != null)
+            firePower.ResetPower();
         if (damageForm != null)
         {
             damageForm.RestoreLargeForm();

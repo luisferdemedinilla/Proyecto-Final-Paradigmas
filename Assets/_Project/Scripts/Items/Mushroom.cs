@@ -24,7 +24,7 @@ public sealed class Mushroom : MonoBehaviour, ILevelResettable, ICollectibleItem
         hitbox.enabled = false;
         if (visual != null)
             visual.gameObject.SetActive(false);
-        player.GrowFromMushroom();
+        player.GrowToLargeForm();
         CollectedBy?.Invoke(player);
     }
     public void ResetForLevel()

@@ -13,6 +13,7 @@ public sealed class CreatorScreen : MonoBehaviour
     public List<Piece> pieces = new List<Piece>();
     public Grid worldGrid;
     public TMP_FontAsset font;
+    public Texture2D goalFlagImage;
     public string initialDesign;
     [SerializeField] RectTransform canvasRoot;
     [SerializeField] List<CreatorCell> cells = new List<CreatorCell>();
@@ -42,6 +43,7 @@ public sealed class CreatorScreen : MonoBehaviour
     {
         InitializeModel();
         if (canvasRoot == null) BuildUI();
+        EnsureExtrasUI();
         EnsureGridLines();
         EnsureStorageUI();
         eraseButton.onClick.AddListener(() => { erasing = true; Refresh(); });
@@ -58,7 +60,46 @@ public sealed class CreatorScreen : MonoBehaviour
     void InitializeModel()
     {
         board = new CreatorBoard(pieces); selected = pieces.FirstOrDefault();
-        if (!string.IsNullOrEmpty(initialDesign)) board.Load(JsonUtility.FromJson<LevelInformation>(initialDesign));
+        if (!string.IsNullOrEmpty(initialDesign)) board.Load(ReadLevel(initialDesign));
+    }
+
+    public static LevelInformation ReadLevel(string json)
+    {
+        var data = JsonUtility.FromJson<LevelInformation>(json);
+        if (data?.placements != null)
+            foreach (var placement in data.placements)
+                if (placement.pieceId == "9f3ab27cd71adbf4cb5f93b211ce7863" || placement.pieceId == "115e4c8d79adf084e87e38eb9530d9a6")
+                    placement.pieceId = "5626ab31af943794da3553b33a437dca";
+        return data;
+    }
+
+    void EnsureExtrasUI()
+    {
+        var panel = canvasRoot.Find("EXTRAS");
+        cards.RemoveAll(card => card.transform.parent == panel);
+        foreach (Transform child in panel)
+            if (child.name.StartsWith("Piece_")) child.gameObject.SetActive(false);
+        var group = pieces.Where(p => p.category == Category.Extras).ToList();
+        for (int i = 0; i < group.Count; i++)
+        {
+            float width = .90f/group.Count, left = .05f+i*width;
+            var card = Button("Piece_"+i,panel,left,.08f,left+width-.015f,.66f,null);
+            card.gameObject.SetActive(true);
+            var image = Icon((RectTransform)card.transform,.04f,.04f,.96f,.96f);
+            image.texture = group[i].image;
+            GoalIcon(image,group[i].isGoal);
+            cards.Add(card);
+        }
+    }
+
+    void GoalIcon(UnityEngine.UI.RawImage icon, bool goal)
+    {
+        var existing = icon.transform.Find("Flag");
+        if (!goal) { if (existing != null) existing.gameObject.SetActive(false); return; }
+        var flag = Rect("Flag",icon.transform,.22f,.61f,.5f,.9f);
+        flag.gameObject.SetActive(true);
+        var image = flag.GetComponent<UnityEngine.UI.RawImage>() ?? flag.gameObject.AddComponent<UnityEngine.UI.RawImage>();
+        image.texture = goalFlagImage; image.raycastTarget = false;
     }
 
     void Update()
@@ -115,7 +156,7 @@ public sealed class CreatorScreen : MonoBehaviour
         {
             if (!File.Exists(SavePath))
             { storageStatus.text = "No hay un nivel guardado con ese nombre."; return; }
-            var data = JsonUtility.FromJson<LevelInformation>(File.ReadAllText(SavePath));
+            var data = ReadLevel(File.ReadAllText(SavePath));
             if (!board.Load(data))
             { storageStatus.text = "El archivo no contiene un nivel compatible."; return; }
             // Keep the requested name so subsequent saves use the same file.
@@ -162,12 +203,20 @@ public sealed class CreatorScreen : MonoBehaviour
             var placement = board.Position(cell.x, cell.y);
             var piece = placement == null || placement.row != cell.y ? null : board.Definition(placement);
             cell.icon.texture = piece?.image; cell.icon.enabled = piece != null;
+            GoalIcon(cell.icon,piece != null && piece.isGoal);
             bool character = piece != null && piece.category == Category.Characters;
+            bool goal = piece != null && piece.isGoal;
             var frame = (RectTransform)cell.icon.transform.parent;
             frame.anchorMin = character ? new Vector2(-.5f,0) : Vector2.zero;
             frame.anchorMax = character ? new Vector2(1.5f,2) : Vector2.one;
+            if (goal)
+            {
+                float height = board.Height(piece);
+                frame.anchorMin = new Vector2((1-height)*.5f,0);
+                frame.anchorMax = new Vector2((1+height)*.5f,height);
+            }
             frame.offsetMin = frame.offsetMax = Vector2.zero;
-            if(character)cell.transform.SetAsLastSibling();
+            if(character || goal)cell.transform.SetAsLastSibling();
             // Terrain fills its cell; characters and tall objects retain their proportions.
             bool block = piece != null && piece.category == Category.Blocks;
             var aspect = cell.icon.GetComponent<UnityEngine.UI.AspectRatioFitter>();

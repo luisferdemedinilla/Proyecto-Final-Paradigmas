@@ -36248,19 +36248,19 @@ MonoBehaviour:
     label: Ladrillo
     category: 1
     isGoal: 0
-    prefab: {fileID: 39422247044003155, guid: 9ee00c5cd543af24895260825a60da7f, type: 3}
+    prefab: {fileID: 628052721582054680, guid: c41b47ed43bb3e94bb26a25f85a3cd8d, type: 3}
     thumbnail: {fileID: 2800000, guid: ce09a0d1e3b8ee84e97e5d68be454ab5, type: 3}
   - id: 674a664a45d0923468160c41b21ba569
     label: Bloque duro
     category: 1
     isGoal: 0
-    prefab: {fileID: 3685815679388558347, guid: 674a664a45d0923468160c41b21ba569, type: 3}
+    prefab: {fileID: 4742458857339971388, guid: bc6d15693fff9c54b87cf47798ed4d8d, type: 3}
     thumbnail: {fileID: 2800000, guid: fd30888b0eaf4134dbf06ff164540c02, type: 3}
   - id: 0d1864c4b56e11848877d84fe88d53d8
     label: Bloque ?
     category: 1
     isGoal: 0
-    prefab: {fileID: 3228644824296419991, guid: 0d1864c4b56e11848877d84fe88d53d8, type: 3}
+    prefab: {fileID: 537744742900268419, guid: 95d0754932f06c84e864a87d46496fd6, type: 3}
     thumbnail: {fileID: 2800000, guid: 4b78b8c9e8589ef4596ec7d3b973cbb8, type: 3}
   - id: c7f71da4c1d42d8409d00c114c99dbc2
     label: Goomba
@@ -36269,29 +36269,18 @@ MonoBehaviour:
     prefab: {fileID: 1250722399869233592, guid: c7f71da4c1d42d8409d00c114c99dbc2, type: 3}
     thumbnail: {fileID: 2800000, guid: afb68a45f0041734889f92267e269d37, type: 3}
   - id: 5626ab31af943794da3553b33a437dca
-    label: Palo de meta
+    label: Meta
     category: 3
     isGoal: 1
-    prefab: {fileID: 2005357836329218076, guid: 5626ab31af943794da3553b33a437dca, type: 3}
+    prefab: {fileID: 9139467843141218373, guid: c94f7adea34da4748bb0b15795ed6f8f, type: 3}
     thumbnail: {fileID: 2800000, guid: ca6af3cd79d676e4893d1fbfb09a175c, type: 3}
-  - id: 9f3ab27cd71adbf4cb5f93b211ce7863
-    label: Bandera
-    category: 3
-    isGoal: 1
-    prefab: {fileID: 7526107038893991377, guid: 9f3ab27cd71adbf4cb5f93b211ce7863, type: 3}
-    thumbnail: {fileID: 2800000, guid: c4f667fc17629284188ebba944e825e1, type: 3}
-  - id: 115e4c8d79adf084e87e38eb9530d9a6
-    label: Torre
-    category: 3
-    isGoal: 1
-    prefab: {fileID: 5574036752576473417, guid: 115e4c8d79adf084e87e38eb9530d9a6, type: 3}
-    thumbnail: {fileID: 2800000, guid: 481a9199295b29b449a97fc15a543de8, type: 3}
   - id: 911f01458ab267e46b5fdb3d985ca5e6
     label: Moneda
     category: 3
     isGoal: 0
     prefab: {fileID: 855399003298489467, guid: 911f01458ab267e46b5fdb3d985ca5e6, type: 3}
     thumbnail: {fileID: 2800000, guid: 7c40d78073370574dbe68e306739a4e7, type: 3}
+  goalFlagImage: {fileID: 2800000, guid: c4f667fc17629284188ebba944e825e1, type: 3}
   worldGrid: {fileID: 1082409697}
   font: {fileID: 11400000, guid: 275f8579c08aae84cb0acd01c18d3238, type: 2}
   initialDesign: '{"name":"juego1","version":1,"columns":28,"rows":8,"placements":[{"pieceId":"e2e7365de0c9c5c49a3c9b9f7c8ee1ba","x":0,"y":2},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":1,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":2,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":3,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":4,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":5,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":6,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":7,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":8,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":9,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":10,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":11,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":12,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":13,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":14,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":15,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":16,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":17,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":18,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":19,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":20,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":22,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":23,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":24,"y":0},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":22,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":21,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":20,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":19,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":18,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":15,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":14,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":13,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":12,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":11,"y":2},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":10,"y":2},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":9,"y":2},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":8,"y":3},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":7,"y":3},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":6,"y":3},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":5,"y":3},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":4,"y":3},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":3,"y":3},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":4,"y":2},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":4,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":3,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":1,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":0,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":2,"y":1},{"pieceId":"9ee00c5cd543af24895260825a60da7f","x":2,"y":2},{"pieceId":"674a664a45d0923468160c41b21ba569","x":13,"y":3},{"pieceId":"674a664a45d0923468160c41b21ba569","x":14,"y":3},{"pieceId":"674a664a45d0923468160c41b21ba569","x":15,"y":3},{"pieceId":"674a664a45d0923468160c41b21ba569","x":16,"y":3},{"pieceId":"674a664a45d0923468160c41b21ba569","x":17,"y":3},{"pieceId":"c7f71da4c1d42d8409d00c114c99dbc2","x":1,"y":2}]}'

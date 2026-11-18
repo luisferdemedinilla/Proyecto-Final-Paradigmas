@@ -28,6 +28,10 @@ public class CreatorBoard
     }
     public int Height(Piece piece)  //how tall is each block
     {
+        if (piece.isGoal)
+        {
+            return 4;
+        }
         if (piece.category == Category.Characters) //main characters are 2 blocks tall
         {
             return 2;

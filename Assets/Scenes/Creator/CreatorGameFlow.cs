@@ -65,7 +65,12 @@ public sealed class CreatorGameFlow : MonoBehaviour
     void ClearWorld()
     {
         playing = false; player = null;
-        if(world != null) { world.SetActive(false); Destroy(world); }
+        if(world != null)
+        {
+            foreach(var block in world.GetComponentsInChildren<QuestionBlock>(true))
+                if(block.SpawnedContent != null) Destroy(block.SpawnedContent);
+            world.SetActive(false); Destroy(world);
+        }
         if(gameCamera != null) { gameCamera.gameObject.SetActive(false); Destroy(gameCamera.gameObject); }
     }
     public void ShowHome()
@@ -140,7 +145,7 @@ public sealed class CreatorGameFlow : MonoBehaviour
     {
         try
         {
-            var data = JsonUtility.FromJson<LevelInformation>(File.ReadAllText(path));
+            var data = CreatorScreen.ReadLevel(File.ReadAllText(path));
             var board = new CreatorBoard(creator.pieces);
             if(!board.Load(data)) { status.text = "Este archivo no contiene un nivel compatible."; return; }
             if(board.GetStart()==null) { status.text = "Este nivel necesita un personaje. Añádelo desde el creador."; return; }
@@ -161,7 +166,42 @@ public sealed class CreatorGameFlow : MonoBehaviour
             var def = board.Definition(p);
             var instance = Instantiate(def.gameObject, new Vector3(p.column+.5f,p.row,0), Quaternion.identity,world.transform);
             instance.name = def.label+"_"+p.column+"_"+p.row;
-            if(def.category==Category.Blocks || def.isGoal)
+            if(def.category==Category.Blocks)
+            {
+                var box = instance.GetComponent<BoxCollider>();
+                instance.transform.localScale = new Vector3(1f/box.size.x,1f/box.size.y,1f/box.size.z);
+                instance.transform.position += new Vector3(p.column+.5f,p.row+.5f,0)-instance.transform.TransformPoint(box.center);
+            }
+            else if(def.isGoal && instance.GetComponent<FlagGoal>() != null)
+            {
+                var renderers = instance.GetComponentsInChildren<Renderer>(true);
+                var bounds = new Bounds();
+                bool first = true;
+                foreach(var renderer in renderers)
+                {
+                    var local = renderer.localBounds;
+                    for(int i=0;i<8;i++)
+                    {
+                        var corner = local.center + Vector3.Scale(local.extents,new Vector3((i&1)==0?-1:1,(i&2)==0?-1:1,(i&4)==0?-1:1));
+                        var point = instance.transform.InverseTransformPoint(renderer.transform.TransformPoint(corner));
+                        if(first) { bounds = new Bounds(point,Vector3.zero); first = false; }
+                        else bounds.Encapsulate(point);
+                    }
+                }
+                if(!first && bounds.size.y > .001f)
+                {
+                    float scale = board.Height(def)/bounds.size.y;
+                    instance.transform.localScale = Vector3.one*scale;
+                    instance.transform.position -= Vector3.up*(bounds.min.y*scale);
+                }
+                var goal = instance.GetComponent<FlagGoal>();
+                goal.Grabbed += _ =>
+                {
+                    foreach(var enemy in world.GetComponentsInChildren<GoombaEnemy>()) enemy.SetStopped(true);
+                };
+                goal.Completed += () => Finish(true);
+            }
+            else if(def.isGoal)
             {
                 // Imported props have different pivots/scales. Fit visuals to a cell, keep physics exact.
                 foreach(var collider in instance.GetComponentsInChildren<Collider>()) collider.enabled = false;
@@ -182,6 +222,7 @@ public sealed class CreatorGameFlow : MonoBehaviour
             }
             if(def.category==Category.Characters) player = instance.GetComponent<MarioPlayerController>();
             var coin = instance.GetComponent<CollectibleCoin>();
+            if(coin!=null) instance.transform.position += Vector3.up*.5f;
             if(coin!=null) coin.CollectedBy += _=> { coins++; UpdateStatus(); };
         }
         if(player==null) { ShowLibrary(pageIndex); status.text = "El personaje no tiene un controlador jugable."; return; }
@@ -206,7 +247,7 @@ public sealed class CreatorGameFlow : MonoBehaviour
         if(!playing || finished) return;
         finished = true; player.enabled = false;
         var body = player.GetComponent<Rigidbody>(); body.linearVelocity = Vector3.zero; body.isKinematic = true;
-        player.GetComponent<Animator>().speed = 0;
+        if(!won) player.GetComponent<Animator>().speed = 0;
         foreach(var enemy in world.GetComponentsInChildren<GoombaEnemy>()) enemy.SetStopped(true);
         Text(page,won ? "¡Nivel completado!" : "Has perdido",.2f,.49f,.6f,.15f,56);
         Button(page,"Volver a intentar",.35f,.34f,.3f,.1f,StartLevel);

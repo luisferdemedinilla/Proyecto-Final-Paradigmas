@@ -160,7 +160,92 @@ public static class HelloMarioPlayableBuilder
         var prefabSettings=new SerializedObject(AssetDatabase.LoadAssetAtPath<GameObject>(Playables+character+"Player.prefab").GetComponent<MarioPlayerController>());settings.FindProperty("crouchHeight").floatValue=prefabSettings.FindProperty("crouchHeight").floatValue;settings.ApplyModifiedPropertiesWithoutUndo();
         go.GetComponent<CapsuleCollider>().sharedMaterial=old.GetComponent<CapsuleCollider>().sharedMaterial;
         if(upgraded) UnityEngine.Object.DestroyImmediate(old.gameObject);else {old.name="MarioLegacy";old.gameObject.SetActive(false);}
-        foreach(var follow in scene.GetRootGameObjects().SelectMany(r=>r.GetComponentsInChildren<MarioFollowCamera>(true))) {var so=new SerializedObject(follow);so.FindProperty("target").objectReferenceValue=go.transform;so.ApplyModifiedPropertiesWithoutUndo();}
+        RebindCharacterReferences(scene, player);
         EditorSceneManager.MarkSceneDirty(scene);EditorSceneManager.SaveScene(scene);Debug.Log("MarioTest now uses Hello Mario "+character+"; original Mario preserved inactive as MarioLegacy.");
+    }
+
+    const double CharacterReferenceRefreshInterval = 0.25;
+    static double nextCharacterReferenceRefresh;
+
+    [InitializeOnLoadMethod]
+    static void SubscribeToCharacterReplacement()
+    {
+        EditorApplication.update -= UpdateMissingCharacterReferences;
+        EditorApplication.update += UpdateMissingCharacterReferences;
+        nextCharacterReferenceRefresh = 0;
+    }
+
+    static void UpdateMissingCharacterReferences()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+            return;
+
+        if (EditorApplication.timeSinceStartup < nextCharacterReferenceRefresh)
+            return;
+
+        nextCharacterReferenceRefresh = EditorApplication.timeSinceStartup + CharacterReferenceRefreshInterval;
+
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            Scene scene = SceneManager.GetSceneAt(i);
+            if (!scene.isLoaded || EditorSceneManager.IsPreviewScene(scene))
+                continue;
+
+            MarioPlayerController[] players = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<MarioPlayerController>())
+                .Where(player => player.isActiveAndEnabled).ToArray();
+
+            if (players.Length == 1)
+                RebindCharacterReferences(scene, players[0], true);
+        }
+    }
+
+    public static void RebindCharacterReferences(Scene scene, MarioPlayerController player, bool missingOnly = false)
+    {
+        foreach (MonoBehaviour component in scene.GetRootGameObjects()
+            .SelectMany(root => root.GetComponentsInChildren<MonoBehaviour>(true)))
+        {
+            if (component == null)
+                continue;
+
+            string referenceName;
+            UnityEngine.Object reference;
+
+            if (component is MarioFollowCamera)
+            {
+                referenceName = "target";
+                reference = player.transform;
+            }
+            else if (component is GoombaEnemy)
+            {
+                referenceName = "target";
+                reference = player;
+            }
+            else if (component is FlagLevelController || component is DemoLevelController)
+            {
+                referenceName = "player";
+                reference = player;
+            }
+            else
+            {
+                continue;
+            }
+
+            SerializedObject settings = new SerializedObject(component);
+            SerializedProperty property = settings.FindProperty(referenceName);
+            UnityEngine.Object previous = property.objectReferenceValue;
+            if (previous == reference)
+                continue;
+
+            if (missingOnly && previous != null && previous is Component previousComponent &&
+                previousComponent.gameObject.activeInHierarchy)
+                continue;
+
+            property.objectReferenceValue = reference;
+            settings.ApplyModifiedProperties();
+
+            if (PrefabUtility.IsPartOfPrefabInstance(component))
+                PrefabUtility.RecordPrefabInstancePropertyModifications(component);
+        }
     }
 }

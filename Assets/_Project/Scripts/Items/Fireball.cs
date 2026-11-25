@@ -3,10 +3,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 public sealed class Fireball : MonoBehaviour
 {
-    [SerializeField, Min(.1f)] float speed = 9f;
-    [SerializeField, Min(.1f)] float bounceSpeed = 4f;
-    [SerializeField, Min(.1f)] float lifetime = 3f;
+    const float MinimumProjectileSetting = 0.1f;
+    const float InitialVerticalSpeed = -1f;
+    const float MinimumBounceNormalY = 0.6f;
 
+    [SerializeField, Min(MinimumProjectileSetting)] float speed = 9f;
+    [SerializeField, Min(MinimumProjectileSetting)] float bounceSpeed = 4f;
+    [SerializeField, Min(MinimumProjectileSetting)] float lifetime = 3f;
     Rigidbody body;
     SphereCollider hitbox;
     int direction;
@@ -22,16 +25,18 @@ public sealed class Fireball : MonoBehaviour
     {
         direction = facing;
         Physics.IgnoreCollision(hitbox, owner);
-        body.linearVelocity = new Vector3(direction * speed, -1f, 0f);
+        body.linearVelocity = new Vector3(direction * speed, InitialVerticalSpeed, 0f);
         Destroy(gameObject, lifetime);
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (spent)
+        {
             return;
+        }
 
-        var goomba = collision.collider.GetComponentInParent<GoombaEnemy>();
+        GoombaEnemy goomba = collision.collider.GetComponentInParent<GoombaEnemy>();
         if (goomba != null)
         {
             goomba.Defeat();
@@ -41,7 +46,7 @@ public sealed class Fireball : MonoBehaviour
 
         for (int i = 0; i < collision.contactCount; i++)
         {
-            if (collision.GetContact(i).normal.y > .6f)
+            if (collision.GetContact(i).normal.y > MinimumBounceNormalY)
             {
                 body.linearVelocity = new Vector3(direction * speed, bounceSpeed, 0f);
                 return;

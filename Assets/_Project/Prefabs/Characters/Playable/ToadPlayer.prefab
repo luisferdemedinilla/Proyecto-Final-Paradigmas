@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7650696039831470539}
   - component: {fileID: 761054533862470363}
   - component: {fileID: 8569785805335790342}
+  - component: {fileID: 5541076905090660748}
+  - component: {fileID: 5550260078375468506}
   m_Layer: 0
   m_Name: ToadPlayer
   m_TagString: Untagged
@@ -158,6 +160,50 @@ MonoBehaviour:
   spawnPoint: {fileID: 0}
   respawnWhenFalling: 1
   respawnBelowY: -10
+--- !u!114 &5541076905090660748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5151634444676198512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc2d30cd28fe3343adf137201b841b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioDamageForm
+  scaledModel: {fileID: 8889417992820085068}
+  smallScaleFactor: 0.67
+  smallModel: {fileID: 0}
+  largeRenderers: []
+  bones: []
+  largePelvis: {fileID: 0}
+  smallPelvis: {fileID: 0}
+  largePelvisRestY: 0
+  smallPelvisUnitsPerLargeUnit: 0
+  smallHeight: 1.0911316
+  smallRadius: 0.256
+  hitInvulnerability: 1
+--- !u!114 &5550260078375468506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5151634444676198512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08e73e37b6dffc4c9500d4feb5bdad6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioFirePower
+  fireKey: 19
+  fireCooldown: 0.2
+  fireballPrefab: {fileID: 2458533206557225560, guid: 57dff0cb2b252f1408c07aa664b23314, type: 3}
+  fireRenderers:
+  - {fileID: 8984421433154895986}
+  - {fileID: 5931421210246582595}
+  - {fileID: 1832588643671712254}
+  fireTexture: {fileID: 2800000, guid: 119d64dc5195ad54d8cb6c3777701b55, type: 3}
 --- !u!1 &8951531387174931304
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,6 +868,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6704161649473616392, guid: ff480f4d014645a4ba78437ed127a324, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6707168080501249326, guid: ff480f4d014645a4ba78437ed127a324, type: 3}
       propertyPath: m_UpdateWhenOffscreen
       value: 1
@@ -1019,8 +1069,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff480f4d014645a4ba78437ed127a324, type: 3}
+--- !u!137 &1832588643671712254 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4036557733230793158, guid: ff480f4d014645a4ba78437ed127a324, type: 3}
+  m_PrefabInstance: {fileID: 2407757250306535480}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &5931421210246582595 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8303149371144495483, guid: ff480f4d014645a4ba78437ed127a324, type: 3}
+  m_PrefabInstance: {fileID: 2407757250306535480}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8889417992820085068 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6500837101538746740, guid: ff480f4d014645a4ba78437ed127a324, type: 3}
+  m_PrefabInstance: {fileID: 2407757250306535480}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8984421433154895986 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6756808772204556362, guid: ff480f4d014645a4ba78437ed127a324, type: 3}
   m_PrefabInstance: {fileID: 2407757250306535480}
   m_PrefabAsset: {fileID: 0}

@@ -45,6 +45,8 @@ GameObject:
   - component: {fileID: 7948093794070164664}
   - component: {fileID: 6719458880536355678}
   - component: {fileID: 3248862850081413794}
+  - component: {fileID: 4179293758536870212}
+  - component: {fileID: 2738247292405039989}
   m_Layer: 0
   m_Name: LuigiPlayer
   m_TagString: Untagged
@@ -190,6 +192,52 @@ MonoBehaviour:
   spawnPoint: {fileID: 0}
   respawnWhenFalling: 1
   respawnBelowY: -10
+--- !u!114 &4179293758536870212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6679562531167435321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc2d30cd28fe3343adf137201b841b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioDamageForm
+  scaledModel: {fileID: 1824331918547489234}
+  smallScaleFactor: 0.67
+  smallModel: {fileID: 0}
+  largeRenderers: []
+  bones: []
+  largePelvis: {fileID: 0}
+  smallPelvis: {fileID: 0}
+  largePelvisRestY: 0
+  smallPelvisUnitsPerLargeUnit: 0
+  smallHeight: 1.2900727
+  smallRadius: 0.256
+  hitInvulnerability: 1
+--- !u!114 &2738247292405039989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6679562531167435321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08e73e37b6dffc4c9500d4feb5bdad6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioFirePower
+  fireKey: 19
+  fireCooldown: 0.2
+  fireballPrefab: {fileID: 2458533206557225560, guid: 57dff0cb2b252f1408c07aa664b23314, type: 3}
+  fireRenderers:
+  - {fileID: 7621006078713959887}
+  - {fileID: 7631823754268478111}
+  - {fileID: 8113151536512129864}
+  - {fileID: 8229348704743542646}
+  - {fileID: 3588852799415017815}
+  fireTexture: {fileID: 2800000, guid: dceedea0e1e229b43ae4184bc372233d, type: 3}
 --- !u!1001 &2747657938786953815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -468,6 +516,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4057350764825010425, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
       propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4057350764825010425, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
+      propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4116203001383414550, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
@@ -1006,5 +1058,30 @@ PrefabInstance:
 --- !u!4 &1824331918547489234 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4571417919988415365, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
+  m_PrefabInstance: {fileID: 2747657938786953815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &3588852799415017815 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1724754194128292608, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
+  m_PrefabInstance: {fileID: 2747657938786953815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &7621006078713959887 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5756414997294694296, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
+  m_PrefabInstance: {fileID: 2747657938786953815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &7631823754268478111 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5748857098828128456, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
+  m_PrefabInstance: {fileID: 2747657938786953815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8113151536512129864 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6248199125797826847, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
+  m_PrefabInstance: {fileID: 2747657938786953815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8229348704743542646 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6058785559875347745, guid: fc1c027d2f6457641be624b723815bb1, type: 3}
   m_PrefabInstance: {fileID: 2747657938786953815}
   m_PrefabAsset: {fileID: 0}

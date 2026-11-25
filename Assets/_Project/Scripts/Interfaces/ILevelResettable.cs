@@ -1,6 +1,4 @@
-﻿using System;
-
 public interface ILevelResettable
 {
-	public void ResetForLevel();
+    public void ResetForLevel();
 }

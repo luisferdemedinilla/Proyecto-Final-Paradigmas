@@ -74,6 +74,217 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 0
+--- !u!319 &-8284534517536215733
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Luigi Fire Throw Upper Body
+  m_Mask: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000u
+  m_Elements:
+  - m_Path: 
+    m_Weight: 0
+  - m_Path: Visual
+    m_Weight: 0
+  - m_Path: Visual/Model
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegL1
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegL1/LegL2
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegL1/LegL2/FootL
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegL1/LegL2/FootL/ToeL
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegR1
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegR1/LegR2
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegR1/LegR2/FootR
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegR1/LegR2/FootR/ToeR
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face00
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face01
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face02
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face03
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face04
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face05
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face06
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face07
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face08
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/LuigiEye
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/LuigiEye/Eyeball
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/LuigiEye/Eyelid00
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/LuigiEye/Eyelid01
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL00
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL01
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL02
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL03
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL04
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL05
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL06
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR00
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR01
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR02
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR03
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR04
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR05
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR06
+    m_Weight: 1
+  - m_Path: Visual/Model/Eyeball__LuigiEyeMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Eyelid00__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Eyelid01__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face00__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face00__LuigiFaceMat00/Face00__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face01__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face01__LuigiFaceMat00/Face01__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face02__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face02__LuigiFaceMat00/Face02__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face03__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face03__LuigiFaceMat00/Face03__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face04__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face04__LuigiFaceMat00/Face04__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face05__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face05__LuigiFaceMat00/Face05__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face06__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face06__LuigiFaceMat00/Face06__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face07__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face07__LuigiFaceMat00/Face07__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face08__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face08__LuigiFaceMat00/Face08__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL00__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL01__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL02__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL03__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL04__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL05__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL06__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR00__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR01__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR02__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR03__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR04__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR05__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR06__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00/Luigi__LuigiBodyMat01
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00/Luigi__LuigiMetalMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00/Luigi__LuigiShoesMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00/Luigi__LuigiSkinMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiBoomerang__LuigiBoomerangBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiBoomerang__LuigiBoomerangBodyMat00/LuigiBoomerang__LuigiBoomerangFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiBoomerang__LuigiBoomerangBodyMat00/LuigiBoomerang__LuigiBoomerangSuitsMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiBoomerang__LuigiBoomerangBodyMat00/LuigiBoomerang__LuigiBoomerangSuitsMat01
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiRaccoonDog__LuigiRaccoonDogBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiRaccoonDog__LuigiRaccoonDogBodyMat00/LuigiRaccoonDog__LuigiRaccoonDogHairMat00
+    m_Weight: 0
 --- !u!1102 &-8146682015504354454
 AnimatorState:
   serializedVersion: 6
@@ -297,6 +508,33 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &-4941817124676289572
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ShrinkHit
+  m_Speed: 0.70175445
+  m_CycleOffset: 0
+  m_Transitions:
+  - {fileID: 378879849188063779}
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 0
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: a13d4637b1ed2aa4a966e8b9346d8093, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &-4810181270141774669
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -447,6 +685,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &-2410913408973135951
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FireThrow
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 0
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 19100cb85e2effe4c8d1d900ed8e0342, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -529,6 +793,18 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+  - serializedVersion: 5
+    m_Name: Fire Throw
+    m_StateMachine: {fileID: 8615912333333011367}
+    m_Mask: {fileID: 6205795824361605760}
+    m_Motions: []
+    m_Behaviours: []
+    m_BlendingMode: 0
+    m_SyncedLayerIndex: -1
+    m_DefaultWeight: 0
+    m_IKPass: 0
+    m_SyncedLayerAffectsTiming: 0
+    m_Controller: {fileID: 9100000}
   m_EvaluateTransitionsOnStart: 1
 --- !u!1101 &140438053106104351
 AnimatorStateTransition:
@@ -557,6 +833,28 @@ AnimatorStateTransition:
   m_TransitionOffset: 0
   m_ExitTime: 0.9
   m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
+--- !u!1101 &378879849188063779
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions: []
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -3928494718282066339}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.06
+  m_TransitionOffset: 0
+  m_ExitTime: 1
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -857,6 +1155,217 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!319 &6205795824361605760
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Luigi Fire Throw Upper Body
+  m_Mask: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000u
+  m_Elements:
+  - m_Path: 
+    m_Weight: 0
+  - m_Path: Visual
+    m_Weight: 0
+  - m_Path: Visual/Model
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegL1
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegL1/LegL2
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegL1/LegL2/FootL
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegL1/LegL2/FootL/ToeL
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegR1
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegR1/LegR2
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegR1/LegR2/FootR
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Hip/LegR1/LegR2/FootR/ToeR
+    m_Weight: 0
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face00
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face01
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face02
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face03
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face04
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face05
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face06
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face07
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/Face08
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/LuigiEye
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/LuigiEye/Eyeball
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/LuigiEye/Eyelid00
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/Head/LuigiFace/LuigiEye/Eyelid01
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL00
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL01
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL02
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL03
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL04
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL05
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderL/ArmL1/ArmL2/HandL/MarioHandL/HandL06
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR00
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR01
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR02
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR03
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR04
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR05
+    m_Weight: 1
+  - m_Path: Visual/Model/AllRoot/JointRoot/Spine1/Spine2/ShoulderR/ArmR1/ArmR2/HandR/MarioHandR/HandR06
+    m_Weight: 1
+  - m_Path: Visual/Model/Eyeball__LuigiEyeMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Eyelid00__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Eyelid01__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face00__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face00__LuigiFaceMat00/Face00__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face01__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face01__LuigiFaceMat00/Face01__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face02__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face02__LuigiFaceMat00/Face02__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face03__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face03__LuigiFaceMat00/Face03__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face04__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face04__LuigiFaceMat00/Face04__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face05__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face05__LuigiFaceMat00/Face05__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face06__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face06__LuigiFaceMat00/Face06__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face07__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face07__LuigiFaceMat00/Face07__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face08__LuigiFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Face08__LuigiFaceMat00/Face08__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL00__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL01__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL02__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL03__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL04__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL05__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandL06__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR00__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR01__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR02__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR03__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR04__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR05__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/HandR06__MarioHandMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00/Luigi__LuigiBodyMat01
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00/Luigi__LuigiMetalMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00/Luigi__LuigiShoesMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/Luigi__LuigiBodyMat00/Luigi__LuigiSkinMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiBoomerang__LuigiBoomerangBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiBoomerang__LuigiBoomerangBodyMat00/LuigiBoomerang__LuigiBoomerangFaceMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiBoomerang__LuigiBoomerangBodyMat00/LuigiBoomerang__LuigiBoomerangSuitsMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiBoomerang__LuigiBoomerangBodyMat00/LuigiBoomerang__LuigiBoomerangSuitsMat01
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiRaccoonDog__LuigiRaccoonDogBodyMat00
+    m_Weight: 0
+  - m_Path: Visual/Model/LuigiRaccoonDog__LuigiRaccoonDogBodyMat00/LuigiRaccoonDog__LuigiRaccoonDogHairMat00
+    m_Weight: 0
 --- !u!1101 &6668964310836805908
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1098,6 +1607,28 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1107 &8615912333333011367
+AnimatorStateMachine:
+  serializedVersion: 7
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fire Throw
+  m_ChildStates:
+  - serializedVersion: 1
+    m_State: {fileID: -2410913408973135951}
+    m_Position: {x: 200, y: 0, z: 0}
+  m_ChildStateMachines: []
+  m_AnyStateTransitions: []
+  m_EntryTransitions: []
+  m_StateMachineTransitions: {}
+  m_StateMachineBehaviours: []
+  m_AnyStatePosition: {x: 50, y: 20, z: 0}
+  m_EntryPosition: {x: 50, y: 120, z: 0}
+  m_ExitPosition: {x: 800, y: 120, z: 0}
+  m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
+  m_DefaultState: {fileID: -2410913408973135951}
 --- !u!1107 &8687923034997684043
 AnimatorStateMachine:
   serializedVersion: 7
@@ -1137,6 +1668,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -6920985914182758197}
     m_Position: {x: 605, y: 455, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -4941817124676289572}
+    m_Position: {x: 640, y: 520, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -8513098233106198275}

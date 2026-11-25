@@ -1,0 +1,322 @@
+INFORME DE PERSONAJES Y SCRIPTS
+Mario Maker — 21 de noviembre de 2026
+
+Alcance: Assets/_Project/Scripts, excluyendo la carpeta Levels.
+Se explican los personajes y los objetos que intervienen en sus acciones.
+
+1. MARIO
+
+Mario puede caminar, correr, agacharse, saltar con altura variable, girar en el
+aire, realizar un golpe hacia abajo, rebotar sobre enemigos y reaparecer.
+Tiene tres formas: pequeño, grande y de fuego. El champiñón hace crecer al
+pequeño; la flor lo hace grande y le da el poder de fuego. Al recibir daño,
+Mario de fuego pierde el poder y sigue grande; Mario grande pasa a pequeño;
+si el pequeño recibe daño sin protección, se emite el evento Damaged.
+La respuesta del nivel a ese evento pertenece a los scripts de Levels.
+
+MarioPlayerController.cs — movimiento, controles y coordinación
+
+- Awake(): obtiene los componentes físicos y de animación, localiza los huesos,
+  guarda el tamaño y la posición iniciales y configura el Rigidbody para el
+  movimiento en un plano. Comprueba qué animaciones admite el Animator.
+- Held(keyboard, key): devuelve si una tecla válida permanece pulsada.
+- Pressed(keyboard, key): devuelve si una tecla válida se pulsó en este frame.
+- Update(): lee el teclado y guarda las solicitudes de movimiento, salto,
+  carrera, agachado, golpe hacia abajo y reinicio manual.
+- OnApplicationFocus(focus): limpia las entradas pendientes al perder el foco
+  para evitar que Mario siga actuando por una tecla que ya se soltó.
+- Grounded(): devuelve si existe suelo válido bajo los pies. Usa rayos a la
+  izquierda, en el centro y a la derecha; ignora el propio Rigidbody y las
+  superficies demasiado verticales. Descarta el apoyo durante el despegue.
+- CanStand(): devuelve si el espacio que ocuparía la cápsula de pie está libre
+  de colliders ajenos a Mario. Permite mantenerlo agachado bajo un techo.
+- FixedUpdate(): aplica el movimiento físico. Gestiona las fases del golpe,
+  el apoyo, el salto, su impulso adicional, el giro aéreo y el agachado.
+  Calcula la velocidad y actualiza los parámetros del Animator.
+- LateUpdate(): orienta el modelo, restaura el hueso del giro al terminar y
+  ajusta la pose de agachado para mantener los pies en su posición de apoyo.
+- TakeHit(): decide el efecto del daño según la forma y la invulnerabilidad.
+  Coordina la pérdida del fuego, el encogimiento y el evento Damaged.
+- GrowToLargeForm(): si Mario está pequeño, restaura el modelo grande y las
+  dimensiones de su collider. Si ya está grande, no necesita cambiar nada.
+- TryGainFirePower(flower): comprueba que existe MarioFirePower, hace crecer
+  a Mario si hace falta y activa el fuego. Devuelve si se pudo obtener el poder.
+- BounceOffEnemy(speed): cancela el golpe y el salto sostenido, aplica una
+  velocidad vertical de rebote y reproduce la animación de salto.
+- CancelPound(): devuelve el golpe hacia abajo a la fase inactiva y limpia
+  su solicitud y su parámetro de animación.
+- SetStandingSize(height, radius): modifica la altura, el radio y el centro
+  de la cápsula, conservando la altura de los pies.
+- ResetToSpawn(): ofrece a otros scripts el acceso al reinicio de Mario.
+- Respawn(): limpia las acciones, restaura la forma grande, elimina el poder
+  de fuego, recoloca a Mario en el punto de aparición y detiene su movimiento.
+- ResetAirSpin(): limpia los estados del salto y el giro y restaura las
+  rotaciones de los huesos que podrían haber quedado alteradas.
+- OnDisable(): cancela las acciones y limpia las entradas al desactivar el
+  controlador. Restaura también la cápsula y la posición local del modelo.
+
+Datos que otros scripts consultan:
+IsGrounded, IsCrouching, IsAirSpinning, IsGroundPounding, GroundPoundPhase,
+IsSmall, Facing, HorizontalSpeed y PrePhysicsVerticalSpeed. Este último guarda
+la velocidad vertical anterior a la respuesta de la colisión.
+AllowManualRespawn permite habilitar o deshabilitar el reinicio por teclado.
+
+Conceptos del salto:
+- coyoteTime: margen para saltar después de abandonar una plataforma.
+- jumpBuffer: margen para recordar una pulsación de salto antes de poder saltar.
+- jumpUntil: instante de caducidad de esa pulsación guardada; en este código
+  corresponde al buffer. El impulso al mantener la tecla se controla con
+  sustainingJump, jumpHoldRemaining, maxJumpHoldTime y jumpHoldAcceleration.
+
+MarioDamageForm.cs — tamaño y protección después de recibir daño
+
+Mario conserva su modelo pequeño específico. Luigi y Toad usan su propio modelo
+reducido mediante scaledModel y smallScaleFactor; así mantienen su identidad.
+
+- Awake(): obtiene el Animator y guarda la escala grande del modelo reducible
+  o la posición de reposo de la pelvis del modelo pequeño específico.
+- AbsorbHit(): devuelve true si la invulnerabilidad o la forma grande permiten
+  absorber el golpe. Si estaba grande, activa el pequeño y la animación de daño.
+  Devuelve false si el pequeño recibe un golpe sin protección.
+- ProtectAfterHit(): establece hasta cuándo dura la invulnerabilidad temporal.
+- RestoreLargeForm(): restaura el modelo grande y termina la protección.
+- SetSmall(value): cambia IsSmall, la visibilidad del modelo pequeño y el
+  renderizado de las piezas grandes. Para Luigi y Toad cambia la escala del
+  modelo actual. El esqueleto sigue animándose en ambas variantes.
+- LateUpdate(): copia las rotaciones de los huesos y adapta el desplazamiento
+  de la pelvis grande para animar el modelo pequeño.
+
+BoneBinding relaciona cada hueso de origen con su destino y su corrección
+de rotación. SmallHeight y SmallRadius permiten ajustar el collider al tamaño
+pequeño; IsInvulnerable indica si está activa la protección.
+
+MarioFirePower.cs — transformación de fuego y disparos
+
+- Awake(): obtiene Mario, su collider y Animator; localiza la capa de lanzamiento
+  y prepara la textura de fuego mediante un MaterialPropertyBlock.
+- EnableFireForm(flower): activa la forma de fuego y registra la flor recogida
+  para poder restaurarla cuando se reinicie el poder.
+- Update(): desvanece la animación de lanzamiento al terminar. Si Mario tiene
+  fuego, está activo, ha pasado el tiempo entre disparos y se pulsa la tecla
+  configurada, crea una bola, la lanza y reproduce la animación del brazo.
+- LoseFireForm(): desactiva el fuego. MarioPlayerController coordina el daño
+  para que el personaje permanezca grande.
+- ResetPower(): elimina el poder, restaura las flores registradas que siguen
+  recogidas, elimina los proyectiles registrados y reinicia el tiempo de disparo.
+- SetFireForm(value): actualiza IsFire y la apariencia; al desactivar el poder
+  retira también el peso de la capa de lanzamiento.
+
+La tecla de fuego y el intervalo entre disparos son configurables en el Inspector.
+
+2. GOOMBA
+
+GoombaEnemy.cs — patrulla, persecución, obstáculos y derrota
+
+Goomba patrulla entre dos límites. Si Mario está cerca, lo persigue. Comprueba
+el suelo y los obstáculos antes de avanzar. Al recibir un pisotón válido o una
+bola de fuego queda derrotado; un contacto que no sea un pisotón daña a Mario.
+
+- Configure(player, left, right): asigna el objetivo y los límites de patrulla.
+- Awake(): obtiene Rigidbody, collider y Animator, guarda la posición inicial
+  y localiza el modelo visual.
+- FixedUpdate(): decide si persigue o patrulla, elige la dirección, comprueba
+  si puede avanzar y actualiza la velocidad, la orientación y la animación.
+- CanMove(travelDirection): devuelve si hay suelo delante y el recorrido no
+  está bloqueado por otro collider. Excluye al propio Goomba y a Mario de estas
+  comprobaciones para que Mario no cuente como suelo o pared.
+- Update(): oculta el modelo al terminar el tiempo visible de la derrota.
+- OnCollisionEnter(collision): reconoce a Mario y comprueba la dirección del
+  impacto y la posición de sus pies. Si es un pisotón, derrota a Goomba y hace
+  rebotar a Mario; en los demás contactos válidos llama a TakeHit().
+- Defeat(): marca la derrota, desactiva el collider, detiene la física,
+  reproduce la animación y programa cuándo ocultar el modelo.
+- SetStopped(value): permite detener o reanudar al enemigo desde otro script,
+  ajustando la animación y el estado cinemático del Rigidbody.
+- ResetForLevel(): restaura su posición, visibilidad, dirección, collider,
+  movimiento y animación de patrulla.
+
+IsDefeated, IsChasing e IsBlocked permiten consultar su estado.
+
+3. OBJETOS Y PROYECTILES
+
+Mushroom.cs — champiñón
+
+- Awake(): obtiene el collider y localiza el modelo visual.
+- OnTriggerEnter(other): detecta a Mario y solicita la recogida.
+- Collect(player): comprueba que la recogida es válida, oculta el objeto,
+  desactiva su collider, hace crecer a Mario y emite CollectedBy.
+- ResetForLevel(): permite recogerlo otra vez y restaura su visibilidad y collider.
+
+FireFlower.cs — flor de fuego
+
+- Awake(): obtiene el collider y localiza el modelo visual.
+- OnTriggerEnter(other): detecta a Mario y solicita la recogida.
+- Collect(player): solicita el poder mediante TryGainFirePower(). Si se puede
+  obtener, marca la flor como recogida, la oculta y emite CollectedBy.
+- ResetForLevel(): restaura la flor para que pueda recogerse otra vez.
+
+CollectibleCoin.cs — moneda
+
+- Awake(): obtiene el collider, localiza el modelo y guarda su rotación inicial.
+- Update(): hace girar la moneda mientras no se haya recogido.
+- OnTriggerEnter(other): reconoce a Mario y llama a Collect().
+- Collect(player): marca la recogida, desactiva el collider, oculta el modelo
+  y emite CollectedBy. El recuento lo realiza quien escucha ese evento.
+- ResetForLevel(): restaura la moneda y su rotación inicial.
+
+Fireball.cs — bola de fuego
+
+- Awake(): obtiene el Rigidbody y el collider esférico.
+- Launch(facing, owner): asigna la dirección, ignora la colisión con el dueño,
+  aplica la velocidad inicial y programa la destrucción por tiempo de vida.
+- OnCollisionEnter(collision): derrota al Goomba alcanzado y consume la bola;
+  si encuentra una superficie con normal de suelo, rebota; ante otro impacto,
+  consume el proyectil.
+- Despawn(): marca la bola como consumida, desactiva su collider y la destruye.
+
+BreakableBrick.cs — bloque rompible
+
+- Awake(): obtiene el collider y establece el estado inicial.
+- OnCollisionEnter(collision): consulta BlockHitDetector al comenzar un contacto
+  y rompe el bloque si el golpe es válido.
+- OnCollisionStay(collision): repite la comprobación mientras continúa el contacto.
+- Break(): desactiva el collider, oculta el bloque entero, muestra los fragmentos
+  y comienza su animación de destrucción.
+- Update(): oculta los fragmentos al terminar la duración configurada.
+- ResetForLevel(): restaura el bloque entero y su collider y oculta los fragmentos.
+
+QuestionBlock.cs — bloque con contenido
+
+- Awake(): obtiene el collider e inicializa el bloque.
+- OnCollisionEnter(collision): comprueba si un golpe inicial debe liberar el objeto.
+- OnCollisionStay(collision): comprueba los golpes durante un contacto mantenido.
+- ReleaseContent(): marca el bloque como vacío, cambia su aspecto e instancia
+  el prefab configurado sobre él. Usa sus límites visuales para apoyarlo bien,
+  aunque el pivote del prefab esté en el centro o en los pies.
+- ResetForLevel(): elimina el contenido generado y restaura el bloque lleno.
+
+BlockHitDetector.cs — comprobación compartida de golpes a bloques
+
+- CheckHit(collision, hitbox): devuelve si Mario produce un golpe válido.
+  Comprueba el contacto vertical, la velocidad anterior al impacto, la posición
+  de Mario respecto al bloque y, para el ataque desde arriba, la fase del golpe.
+  Es una utilidad estática; no se añade como componente de un GameObject.
+
+FlagGoal.cs — bandera y secuencia de final
+
+- Awake(): guarda la posición inicial de la bandera.
+- OnTriggerEnter(other): detecta a Mario y comienza el final si está disponible.
+- Begin(player): elige las animaciones correspondientes al controlador de Mario,
+  desactiva su control, prepara la física y alinea la mano con el mástil.
+  Inicia la pose de agarre y emite Grabbed.
+- Play(clip): destruye el grafo de animación anterior y crea uno manual para
+  reproducir el clip indicado sobre el Animator del personaje.
+- MovePlayer(position): actualiza la posición del Rigidbody y del Transform.
+- Update(): avanza desde el agarre al deslizamiento y después a la celebración.
+  Baja la bandera, mueve a Mario, evalúa las animaciones y emite Completed
+  al llegar a la celebración. Al acabar el clip conserva su último fotograma.
+- ResetForLevel(): destruye el grafo, restaura la bandera y el controlador
+  anterior del Animator y limpia las referencias y estados de la secuencia.
+- OnDestroy(): libera el grafo si el objeto se destruye.
+
+CharacterClips agrupa el controlador y los clips de agarre, deslizamiento y
+celebración de un personaje. IsFinishing y HasCompleted indican el progreso;
+FlagHeight expone la altura actual de la bandera.
+
+4. CÁMARA E INTERFACES
+
+MarioFollowCamera.cs — seguimiento de Mario
+
+- Start(): configura la cámara ortográfica y su tamaño y establece su posición
+  inicial si hay un objetivo asignado.
+- Desired(): devuelve la posición deseada según el objetivo, el desplazamiento,
+  el seguimiento vertical y la altura mínima. Mantiene la profundidad configurada.
+- TryResolveTarget(): conserva un objetivo activo o busca al único personaje
+  jugable activo de la misma escena si el anterior se ha borrado o desactivado.
+  Al cambiar de objetivo reinicia la velocidad de suavizado. Si hay varios
+  candidatos, es necesario asignar el objetivo explícitamente.
+- LateUpdate(): aproxima suavemente la cámara a esa posición mediante SmoothDamp.
+  Antes comprueba que el objetivo siga siendo válido e intenta recuperarlo.
+
+ICollectibleItem.cs
+- Collect(player): contrato que deben cumplir los objetos recogibles. Cada clase
+  implementa qué sucede al recogerla.
+
+ILevelResettable.cs
+- ResetForLevel(): contrato para devolver un objeto a su estado de inicio.
+  Permite reiniciar distintos objetos usando la misma llamada.
+
+5. CRITERIOS DE LA REVISIÓN
+
+- Se sustituyeron los var por sus tipos explícitos.
+- Se separaron instrucciones, declaraciones y bloques que estaban en una línea.
+- Se hicieron más legibles las condiciones largas y los ternarios complejos.
+- Se nombraron los números de ajuste: distancias, tolerancias, duraciones,
+  velocidades internas, orientaciones, capacidades de arrays y fases.
+- Las constantes representan valores fijos. Los campos configurables conservan
+  sus nombres, tipos, valores iniciales y atributos de serialización.
+- Los valores que ya inicializan un campo con nombre, como runSpeed o el vector
+  offset, siguen siendo sus valores predeterminados.
+- Se mantienen valores matemáticos básicos: el cero de un índice o vector,
+  dividir la altura entre dos, convertir radio en diámetro y los límites 0 y 1
+  de una interpolación normalizada.
+- Las fases públicas del golpe conservan sus valores: inactivo 0, preparación 1,
+  caída 2 y recuperación 3. Los scripts de Levels siguen siendo compatibles.
+- Se eliminaron importaciones sin uso y el cálculo de origin en Grounded(),
+  junto con groundSphereStartOffset, que solo alimentaba ese cálculo. La versión
+  recibida ya comprobaba el suelo exclusivamente con rayos.
+
+Comprobaciones:
+- Recompilación en Unity: 0 errores y 0 advertencias.
+- Conservadas las 82 firmas de métodos y los 84 campos serializados, incluidos
+  sus valores predeterminados y atributos.
+- Los archivos de Levels coinciden con la copia previa.
+- Estas comprobaciones verifican compilación y compatibilidad del código;
+  no se ha realizado una prueba completa de todas las acciones en Play Mode.
+
+Copia previa de los scripts: Temp/ScriptReadabilityBackup/Scripts.
+Incluye los cambios que ya existían en MarioPlayerController antes de la revisión.
+Para deshacer esta revisión, se pueden restaurar desde esa copia los archivos
+revisados de Camera, Enemies, Interfaces, Items y Player.
+Temp es una carpeta temporal de Unity: conserva esa copia en otro lugar si
+quieres disponer de ella a largo plazo.
+
+ACTUALIZACIÓN — 22 de noviembre de 2026
+
+Se repararon las referencias al jugador de la cámara, Goomba y el controlador
+de MarioFlagLevel. La herramienta de cambio de personaje actualiza ahora esas
+referencias conjuntamente mediante RebindCharacterReferences().
+
+Luigi y Toad ya tienen reducción de modelo y collider, crecimiento por champiñón,
+flor de fuego, textura propia de fuego, proyectil, animación de lanzamiento y
+animación de daño. CharacterPowerUpSetup permite volver a configurar sus prefabs.
+Los scripts de Levels no se han modificado.
+
+Prueba realizada en Play Mode:
+- La cámara sigue al jugador y Goomba lo persigue en ambas direcciones.
+- En Mario, Luigi y Toad: el daño reduce al personaje, el champiñón lo hace crecer
+  y una flor recogida en pequeño lo hace grande y le da fuego.
+- E crea una bola y reproduce la animación de lanzamiento.
+- Un golpe a la forma de fuego deja al personaje grande y activa la protección.
+- Tras la protección, el siguiente golpe lo reduce; otro golpe sin protección
+  emite Damaged. El reinicio restaura la forma grande y la flor recogida.
+- Todas estas comprobaciones pasaron sin nuevas excepciones de ejecución.
+
+Resultado detallado: Temp/CharacterGameplayValidation.txt.
+La copia previa a esta corrección está en Temp/CharacterFixBackup.
+
+Sustitución manual de personajes:
+La cámara recupera automáticamente al personaje activo si se borra o desactiva
+su objetivo anterior. En el editor también se actualizan las referencias rotas
+de cámara, Goomba y controlador del nivel cuando hay un único personaje jugable
+activo en la escena. No es necesario usar el menú de cambio de personaje.
+Se ha probado borrar Mario y añadir Luigi, desactivar Luigi y añadir Toad y
+cambiar el objetivo durante Play Mode. Las pruebas pasaron sin errores nuevos.
+Resultado: Temp/CameraReplacementValidation.txt.
+
+Animación de lanzamiento de Luigi y Toad:
+Se corrigió el guardado de los estados, la máscara y la capa Fire Throw de sus
+Animator Controllers. Se comprobó el movimiento real de brazos y manos al pulsar
+E, también después de una recarga de scripts. Los tres personajes superan la
+prueba. El script compartido de fuego y su estructura permanecen sin cambios.
+Mediciones: Temp/FireThrowPose.txt.

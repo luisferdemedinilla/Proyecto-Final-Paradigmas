@@ -80,6 +80,17 @@ public sealed class MarioPlayerController : MonoBehaviour
     public bool AllowManualRespawn { get; set; } = true;
     public bool IsSmall => damageForm != null && damageForm.IsSmall;
     public int Facing => facing;
+    private float groundCheckDelayAfterJump = 0.12f;
+    private float upwardSpeedThreshold = 0.15f;
+    private float groundProbeRadiusFactor = 0.8f;
+    private float groundSphereStartOffset = 0.08f;
+    private float minGroundNormalY = 0.6f;
+    private float footRayStartHeight = 0.12f;
+    private float footRaySpreadFactor = 0.7f;
+    private float footRayCastDistance = 0.2f;
+    private float standingCheckRadiusInset = 0.02f;
+    private float standingCheckBottomOffset = 0.03f;
+
     public void TakeHit()
     {
         if (firePower != null && firePower.IsFire)
@@ -139,116 +150,249 @@ public sealed class MarioPlayerController : MonoBehaviour
     public bool IsCrouching {get;private set;}
     public float HorizontalSpeed => body==null?0:body.linearVelocity.x;
 
-    static readonly int SpeedId=Animator.StringToHash("Speed");
-    static readonly int GroundedId=Animator.StringToHash("Grounded");
-    static readonly int VerticalId=Animator.StringToHash("VerticalSpeed");
-    static readonly int CrouchId=Animator.StringToHash("Crouching");
+    static readonly string SpeedId="Speed";
+    static readonly string GroundedId ="Grounded";
+    static readonly string VerticalId ="VerticalSpeed";
+    static readonly string CrouchId ="Crouching";
+    static readonly string JumpId = "Jumping";
 
-    static readonly int AirSpinId=Animator.StringToHash("AirSpinning");
-    static readonly int AirSpinSpeedId=Animator.StringToHash("AirSpinSpeed");
+    static readonly string AirSpinId ="AirSpinning";
+    static readonly string AirSpinSpeedId ="AirSpinSpeed";
 
     void Awake()
     {
-        body=GetComponent<Rigidbody>();capsule=GetComponent<CapsuleCollider>();animator=GetComponent<Animator>();
+        body=GetComponent<Rigidbody>();
+
+        capsule=GetComponent<CapsuleCollider>();
+
+        animator=GetComponent<Animator>();
+
         damageForm=GetComponent<MarioDamageForm>();
+
         firePower=GetComponent<MarioFirePower>();
+
         if(visual==null) visual=transform.Find("Visual");
+
         Transform animationRig = damageForm == null ? visual : visual.Find("Model");
+
         foreach(var bone in (animationRig==null?transform:animationRig).GetComponentsInChildren<Transform>(true))
         {
-            if(bone.name=="AllRoot") {authoredAnimationRoot=bone;authoredRootRestRotation=bone.localRotation;}
-            if(bone.name=="skl_root") {spinRoot=bone;spinRootRestRotation=bone.localRotation;}
+            if(bone.name=="AllRoot") 
+            {
+                authoredAnimationRoot=bone;
+             
+                authoredRootRestRotation=bone.localRotation;
+            }
+
+            if(bone.name=="skl_root") {
+                spinRoot=bone;
+
+                spinRootRestRotation=bone.localRotation;
+            }
+            
             if((bone.name=="ankle_l1" || bone.name=="FootL")) leftAnkle=bone;
+
             if((bone.name=="ankle_r1" || bone.name=="FootR")) rightAnkle=bone;
         }
+
         if(leftAnkle!=null) leftAnkleRestY=transform.InverseTransformPoint(leftAnkle.position).y;
+
         if(rightAnkle!=null) rightAnkleRestY=transform.InverseTransformPoint(rightAnkle.position).y;
-        standingHeight=capsule.height;standingCenter=capsule.center;
-        largeHeight=standingHeight;largeRadius=capsule.radius;
+
+        // Because Mario can be small and also move around the level, we have to save his regular size and the spwanPoint
+        standingHeight = capsule.height;
+        
+        standingCenter=capsule.center;
+
+        largeHeight=standingHeight;
+        
+        largeRadius=capsule.radius;
+
         if(visual!=null) visualRestPosition=visual.localPosition;
-        startPosition=body.position;planeZ=body.position.z;
+        
+        startPosition=body.position;
+        
+        planeZ=body.position.z;
+
+        // Because we are doing a 2D game in a 3D world, we have to make sure that the player can not move in Z axis
         body.constraints=RigidbodyConstraints.FreezePositionZ|RigidbodyConstraints.FreezeRotation;
-        body.interpolation=RigidbodyInterpolation.Interpolate;body.collisionDetectionMode=CollisionDetectionMode.ContinuousDynamic;
+
+        body.interpolation=RigidbodyInterpolation.Interpolate;
+        
+        // To make sure that Mario does not go through walls if he is going fast
+        body.collisionDetectionMode=CollisionDetectionMode.ContinuousDynamic;
+
         animator.applyRootMotion=false;
+
         supportsPound=animator.HasState(0,Animator.StringToHash("GroundPoundStart"));
-        foreach(var parameter in animator.parameters)if(parameter.name=="Jumping")supportsJumping=true;
+
+        foreach (var parameter in animator.parameters) {
+
+            if (parameter.name == "Jumping") supportsJumping = true;
+
+        }
+
     }
 
-    static bool Held(Keyboard keyboard,Key key) => key!=Key.None && keyboard[key].isPressed;
-    static bool Pressed(Keyboard keyboard,Key key) => key!=Key.None && keyboard[key].wasPressedThisFrame;
+    static bool Held(Keyboard keyboard, Key key)
+    {
+        return key != Key.None && keyboard[key].isPressed;
+    }
+
+    static bool Pressed(Keyboard keyboard, Key key)
+    {
+        return key != Key.None && keyboard[key].wasPressedThisFrame;
+    }
+
     void Update()
     {
-        var keyboard=Keyboard.current;
-        if(keyboard==null) {horizontal=0;wantsRun=wantsCrouch=jumpHeld=sustainingJump=false;return;}
-        horizontal=(Held(keyboard,rightKey)?1:0)-(Held(keyboard,leftKey)?1:0);
-        wantsRun=Held(keyboard,runKey);wantsCrouch=Held(keyboard,crouchKey);
+        Keyboard keyboard=Keyboard.current;
+
+        //If there is not a Key pressed, then there is not any action to do
+        if(keyboard==null) {
+
+            horizontal=0;
+            
+            wantsRun=wantsCrouch=jumpHeld=sustainingJump=false;
+            
+            return;
+        }
+
+        horizontal = 0;
+
+        if (Held(keyboard, rightKey))
+        {
+            horizontal += 1;
+        }
+
+        if (Held(keyboard, leftKey))
+        {
+            horizontal -= 1;
+        }
+
+        wantsRun =Held(keyboard,runKey);
+        
+        wantsCrouch=Held(keyboard,crouchKey);
+
         bool previouslyHeld=jumpHeld;
+
         jumpHeld=Held(keyboard,jumpKey)||Held(keyboard,alternateJumpKey);
+
         if(!jumpHeld) sustainingJump=false;
+
         if(!previouslyHeld && (Pressed(keyboard,jumpKey)||Pressed(keyboard,alternateJumpKey))) jumpPressed=true;
+
         if(Pressed(keyboard,crouchKey)) poundRequested=true;
+
         if(AllowManualRespawn && Pressed(keyboard,respawnKey)) respawnRequested=true;
     }
     void OnApplicationFocus(bool focus)
     {
-        if(!focus) {horizontal=0;wantsRun=wantsCrouch=jumpHeld=sustainingJump=false;jumpUntil=-100;jumpPressed=poundRequested=false;}
+        if(!focus) {
+
+            horizontal=0;
+
+            wantsRun=wantsCrouch=jumpHeld=sustainingJump=false;
+            
+            jumpUntil=-100;
+            
+            jumpPressed=poundRequested=false;
+        }
     }
 
     bool Grounded()
     {
         // A real jump must leave support immediately. Small upward contact
         // impulses at block seams do not mean the feet have left the floor.
-        if(Time.time-lastJump<0.12f || (hasJumped && body.linearVelocity.y>0.15f)) return false;
-        float radius=capsule.radius*0.8f;
+        if (Time.time - lastJump < groundCheckDelayAfterJump || (hasJumped && body.linearVelocity.y > upwardSpeedThreshold))
+        {
+            return false;
+        }
+            
+        float radius=capsule.radius* groundProbeRadiusFactor;
+
         float bottom=capsule.center.y-capsule.height/2;
-        var origin=body.position+Vector3.up*(bottom+radius+0.08f);
-        int count=Physics.SphereCastNonAlloc(origin,radius,Vector3.down,groundHits,0.16f,groundMask,QueryTriggerInteraction.Ignore);
-        for(int i=0;i<count;i++) if(groundHits[i].collider.attachedRigidbody!=body && groundHits[i].normal.y>0.6f) return true;
-        // Near adjacent box edges the sphere may report an edge normal. Probe
-        // actual support under the centre and both sides of the foot as well.
+
+        Vector3 origin =body.position+Vector3.up*(bottom+radius+ groundSphereStartOffset);
+
         for(int probe=-1;probe<=1;probe++)
         {
-            var foot=body.position+Vector3.up*(bottom+.12f)+Vector3.right*(probe*radius*.7f);
-            count=Physics.RaycastNonAlloc(foot,Vector3.down,groundHits,.2f,groundMask,QueryTriggerInteraction.Ignore);
-            for(int i=0;i<count;i++)if(groundHits[i].collider.attachedRigidbody!=body && groundHits[i].normal.y>.6f)return true;
+            
+            Vector3 foot=body.position+Vector3.up*(bottom+ footRayStartHeight) +Vector3.right*(probe*radius* footRaySpreadFactor);
+
+            int hitCount = Physics.RaycastNonAlloc(foot,Vector3.down,groundHits, footRayCastDistance, groundMask,QueryTriggerInteraction.Ignore);
+
+            for (int i = 0; i < hitCount; i++) { 
+                if (groundHits[i].collider.attachedRigidbody != body && groundHits[i].normal.y > minGroundNormalY) return true; 
+            }
         }
         return false;
     }
     bool CanStand()
     {
-        float radius=capsule.radius-0.02f;
+        float radius=capsule.radius- standingCheckRadiusInset;
         float bottom=standingCenter.y-standingHeight/2;
-        var a=body.position+Vector3.up*(bottom+radius+0.03f);
-        var b=body.position+Vector3.up*(bottom+standingHeight-radius);
+        Vector3 a =body.position+Vector3.up*(bottom+radius+ standingCheckBottomOffset);
+        Vector3 b =body.position+Vector3.up*(bottom+standingHeight-radius);
         int count=Physics.OverlapCapsuleNonAlloc(a,b,radius,ceilingHits,groundMask,QueryTriggerInteraction.Ignore);
-        if(count==ceilingHits.Length) return false;
         for(int i=0;i<count;i++) if(ceilingHits[i].attachedRigidbody!=body) return false;
         return true;
     }
     void FixedUpdate()
     {
-        if(respawnRequested || (respawnWhenFalling && body.position.y<respawnBelowY)) {Respawn();return;}
+        if(respawnRequested || (respawnWhenFalling && body.position.y<respawnBelowY))
+        {
+            Respawn();
+            return;
+        }
+
         int previousPoundPhase=poundPhase;
+
         IsGrounded=Grounded();
-        if(IsGrounded && poundPhase==2){poundPhase=3;poundUntil=Time.time+groundPoundRecovery;}
+        if(IsGrounded && poundPhase==2)
+        {
+            poundPhase=3;
+            poundUntil=Time.time+groundPoundRecovery;
+        }
+
         if(poundPhase==3 && Time.time>=poundUntil)CancelPound();
+
         if(poundRequested && supportsPound && !IsGrounded && hasJumped && poundPhase==0)
         {
-            poundPhase=1;poundUntil=Time.time+groundPoundWindup;sustainingJump=false;airSpinUntil=-100;IsAirSpinning=false;jumpUntil=-100;
+            poundPhase=1;
+            poundUntil=Time.time+groundPoundWindup;
+            sustainingJump=false;
+            airSpinUntil=-100;
+            IsAirSpinning=false;
+            jumpUntil=-100;
 
         }
         poundRequested=false;
-        if(poundPhase==1 && Time.time>=poundUntil){poundPhase=2;}
+
+        if(poundPhase==1 && Time.time>=poundUntil)
+        {
+            poundPhase=2;
+        }
+
         if(poundPhase!=0)jumpPressed=false;
-        if(IsGrounded) {lastGrounded=Time.time;hasJumped=false;airSpinUsed=false;airSpinUntil=-100;}
+
+        if(IsGrounded) {
+            lastGrounded=Time.time;
+            hasJumped=false;
+            airSpinUsed=false;
+            airSpinUntil=-100;
+        }
+
         if(jumpPressed)
         {
             if(!IsGrounded && hasJumped)
             {
                 if(!airSpinUsed)
                 {
-                    airSpinUsed=true;airSpinUntil=Time.time+Mathf.Max(.05f,airSpinDuration);
-                    sustainingJump=false;jumpUntil=-100;
+                    airSpinUsed=true;
+                    airSpinUntil=Time.time+Mathf.Max(.05f,airSpinDuration);
+                    sustainingJump=false;
+                    jumpUntil=-100;
                     // Start immediately even while Jump/Fall is blending.
                     animator.Play("AirSpin",0,0f);
                 }
@@ -257,20 +401,75 @@ public sealed class MarioPlayerController : MonoBehaviour
             else jumpUntil=Time.time+jumpBuffer;
             jumpPressed=false;
         }
+
         IsAirSpinning=!IsGrounded && Time.time<airSpinUntil;
+
         bool crouch=wantsCrouch && IsGrounded && poundPhase==0;
+
         if(IsCrouching && !crouch && !CanStand()) crouch=true;
+
         IsCrouching=crouch;
+
         capsule.height=crouch?Mathf.Clamp(crouchHeight*standingHeight/largeHeight,2*capsule.radius,standingHeight):standingHeight;
+
         capsule.center=standingCenter+Vector3.up*((capsule.height-standingHeight)/2);
-        var velocity=body.linearVelocity;
-        float speed=crouch?crouchSpeed:(!requireRunKey || wantsRun)?runSpeed:walkSpeed;
-        float rate=IsGrounded?(horizontal==0?braking:acceleration):airAcceleration;
+
+        Vector3 velocity=body.linearVelocity;
+
+        float speed;
+
+        if (crouch)
+        {
+            speed = crouchSpeed;
+        }
+        else if (!requireRunKey || wantsRun)
+        {
+            speed = runSpeed;
+        }
+        else
+        {
+            speed = walkSpeed;
+        }
+
+        float rate;
+
+        if (IsGrounded)
+        {
+            if (horizontal == 0)
+            {
+                rate = braking;
+            }
+            else
+            {
+                rate = acceleration;
+            }
+        }
+        else
+        {
+            rate = airAcceleration;
+        }
+
         velocity.x=Mathf.MoveTowards(velocity.x,horizontal*speed,rate*Time.fixedDeltaTime);
+
         velocity.z=0;
+
         if(jumpUntil>=Time.time && Time.time-lastGrounded<=coyoteTime && !crouch && poundPhase==0)
         {
-            velocity.y=Mathf.Min(minimumJumpSpeed,jumpSpeed);jumpUntil=-100;lastGrounded=-100;lastJump=Time.time;IsGrounded=false;sustainingJump=jumpHeld;hasJumped=true;jumpHoldRemaining=maxJumpHoldTime;
+            velocity.y=Mathf.Min(minimumJumpSpeed,jumpSpeed);
+            
+            jumpUntil=-100;
+            
+            lastGrounded=-100;
+            
+            lastJump=Time.time;
+            
+            IsGrounded=false;
+            
+            sustainingJump=jumpHeld;
+            
+            hasJumped=true;
+            
+            jumpHoldRemaining=maxJumpHoldTime;
         }
         // Releasing ends assistance permanently for this jump. Holding longer
         // than the configured window cannot add more height.
@@ -280,23 +479,50 @@ public sealed class MarioPlayerController : MonoBehaviour
             else
             {
                 float assistTime=Mathf.Min(Time.fixedDeltaTime,jumpHoldRemaining);
+
                 velocity.y=Mathf.Min(jumpSpeed,velocity.y+jumpHoldAcceleration*assistTime);
+
                 jumpHoldRemaining=Mathf.Max(0,jumpHoldRemaining-assistTime);
             }
         }
+
         if(IsAirSpinning && velocity.y<0)
             velocity.y=Mathf.Max(velocity.y,-airSpinFallSpeed-Physics.gravity.y*Time.fixedDeltaTime);
+
         if(poundPhase==1)velocity=new Vector3(0,-Physics.gravity.y*Time.fixedDeltaTime,0);
+
         else if(poundPhase==2)velocity=new Vector3(0,-groundPoundSpeed,0);
+
         else if(poundPhase==3)velocity.x=0;
+
         PrePhysicsVerticalSpeed=velocity.y;
+
         body.linearVelocity=velocity;
-        if(horizontal!=0) facing=horizontal>0?1:-1;
+
+        if (horizontal != 0)
+        {
+            if (horizontal > 0)
+            {
+                facing = 1;  // Derecha
+            }
+            else
+            {
+                facing = -1; // Izquierda
+            }
+        }
+
         animator.SetFloat(SpeedId,Mathf.Abs(velocity.x)/Mathf.Max(0.1f,runSpeed));
-        animator.SetBool(GroundedId,IsGrounded);animator.SetFloat(VerticalId,velocity.y);
-        if(supportsJumping)animator.SetBool("Jumping",hasJumped && !IsGrounded && velocity.y>0 && poundPhase==0);
+
+        animator.SetBool(GroundedId,IsGrounded);
+        
+        animator.SetFloat(VerticalId,velocity.y);
+
+        if(supportsJumping)animator.SetBool(JumpId, hasJumped && !IsGrounded && velocity.y>0 && poundPhase==0);
+
         animator.SetBool(CrouchId,IsCrouching && IsGrounded);
+
         animator.SetBool(AirSpinId,IsAirSpinning);
+
         if(supportsPound)
         {
             animator.SetBool("GroundPounding",poundPhase!=0);
@@ -366,9 +592,18 @@ public sealed class MarioPlayerController : MonoBehaviour
     void OnDisable()
     {
         CancelPound();
+
         ResetAirSpin();
-        horizontal=0;wantsRun=wantsCrouch=jumpHeld=sustainingJump=false;
-        if(capsule!=null && standingHeight>0) {capsule.height=standingHeight;capsule.center=standingCenter;}
+
+        horizontal=0;
+
+        wantsRun=wantsCrouch=jumpHeld=sustainingJump=false;
+
+        if(capsule!=null && standingHeight>0) 
+        {
+            capsule.height=standingHeight;
+            capsule.center=standingCenter;
+        }
         if(visual!=null) visual.localPosition=visualRestPosition;
     }
 }
